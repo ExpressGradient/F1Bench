@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+import urllib.error
+import urllib.request
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Search the live web with Parallel and return cited excerpts."
+    )
+    parser.add_argument("objective", help="what you need to learn")
+    parser.add_argument("queries", nargs="+", help="one to five short keyword queries")
+    parser.add_argument("--max-chars", type=int, default=30_000)
+    args = parser.parse_args()
+    if len(args.queries) > 5:
+        parser.error("at most five queries are allowed")
+
+    key = os.getenv("PARALLEL_API_KEY")
+    if not key:
+        raise SystemExit("PARALLEL_API_KEY is not configured")
+    body = {
+        "objective": args.objective,
+        "search_queries": args.queries,
+        "max_chars_total": args.max_chars,
+    }
+    if client_model := os.getenv("PARALLEL_CLIENT_MODEL"):
+        body["client_model"] = client_model
+    request = urllib.request.Request(
+        "https://api.parallel.ai/v1/search",
+        data=json.dumps(body).encode(),
+        headers={"Content-Type": "application/json", "x-api-key": key},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            result = json.load(response)
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode(errors="replace")
+        raise SystemExit(f"Parallel search failed ({error.code}): {detail}") from error
+    except (urllib.error.URLError, TimeoutError) as error:
+        raise SystemExit(f"Parallel search failed: {error}") from error
+
+    for index, item in enumerate(result.get("results", []), start=1):
+        print(f"[{index}] {item.get('title') or '(untitled)'}")
+        print(item.get("url", ""))
+        if item.get("publish_date"):
+            print(f"Published: {item['publish_date']}")
+        for excerpt in item.get("excerpts") or []:
+            print(excerpt.strip())
+        print()
+    for warning in result.get("warnings") or []:
+        print(f"Warning: {warning}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()

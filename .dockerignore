@@ -1,0 +1,5 @@
+# The agent image only needs the Dockerfile and its two tool wrappers.
+**
+!Dockerfile
+!container/
+!container/**

@@ -1,0 +1,22 @@
+{
+  "entrant": "glm-5-3-max-v1",
+  "model": "z-ai/glm-5.3",
+  "reasoning_policy": "maximum_supported_at_creation",
+  "reasoning_config": {
+    "effort": "max"
+  },
+  "request_model": "z-ai/glm-5.3-20260816",
+  "openrouter_provider": {
+    "order": [
+      "fireworks",
+      "z-ai/fp8"
+    ],
+    "only": [
+      "fireworks",
+      "z-ai/fp8"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "created_at": "2026-09-13T06:52:22.992516+00:00"
+}

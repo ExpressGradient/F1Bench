@@ -1,0 +1,17 @@
+# Forecast notes
+
+## 2026-14 Madrid pre-race (forecast made 2026-09-13 07:30 UTC)
+- FIA grid: NOR ANT VER HAM LEC RUS PIA LAW COL LIN HUL BOR OCO GAS TSU ALB ALO PER BOT SAI BEA STR. SAI 3-place penalty; STR 40-place PU penalty; BEA/STR permitted to start.
+- Weekend: Mercedes strongest high-fuel evidence (RUS benchmark, VER +0.13s adjusted); NOR pole by 0.011 but no useful FP2 long run after gearbox issue. Hot/dry. Severe graining and 0.2-0.3s/lap Friday degradation versus ~24s pit loss; overtaking very difficult.
+- Market calibration at cutoff: Polymarket raw mids ANT .40, NOR .35, VER .12, HAM .065, RUS .0445, LEC .029, PIA .017. Final model P1 approximately .379/.345/.114/.063/.043/.030/.015.
+- Used mixture of processional, high-degradation, and chaotic regimes; expected 4.82 retirements. Elevated STR failure risk (.47 retirement, .04 DNS), BEA .31/.015 after rebuild. Late retirements can retain numbered classifications.
+- Check official result later for calibration, especially whether 25% chaos weighting and midfield top-10 spread were too broad.
+
+## 2026-14 Madrid post-race (official result)
+- Result: ANT-VER-NOR-LEC-RUS-LAW-COL-PIA-LIN-HUL; NC SAI/PER/STR/HAM. ANT was the 37.9% P1 favourite, the three highest podium probabilities made the exact podium, and 9/10 drivers with the highest points probabilities scored (HUL, ranked 12th at 45.6%, replaced HAM). The central pace/order model was strong; do not materially retune it from this race.
+- Separate outcome from pace: NOR led by about 4.5s and had the best managed race pace. A Lap-13 VSC began just after he passed pit entry, gave ANT/VER cheap stops, and ended before NOR returned; his subsequent 7s stop compounded the loss. ANT winning is neutralisation/pit-stop variance, not proof that the sparse Friday long-run signal correctly put Mercedes ahead. Keep adjusted short practice runs heavily shrunk and treat a missing run as uncertainty, not negative evidence.
+- Friday graining/degradation did not translate directly: difficult passing, a ~24s stop loss, track evolution and managed pace made one stop dominant, while the little-used Hard stayed consistent for 45+ laps. At new tracks, condition multi-stop/high-degradation weight on passing incentives and likely management, and retain wider priors for untested compounds.
+- Model VSC/SC timing jointly with track location, starting compound and pit windows rather than only adding generic “chaos” dispersion; even a very short VSC produced large, correlated strategy gains/losses in an otherwise processional race.
+- Tail check, not a pace update: PIA's P8 had only 2.97% exact probability (largest log-loss miss) after Lap-1 front-wing damage, traffic and an adverse VSC. On low-overtaking tracks, ensure repairable contact carries enough classified multi-place downside mass rather than routing most adverse mass to retirement. HAM's brake DNF was a plausible 10.8% NC tail, not evidence to demote his pace.
+- Reliability level was sound: 4 retirements versus 4.82 expected (4.34 expected NC), retirement Brier 0.1410. Elevated STR/PER risks helped, but their realised causes do not cleanly validate every causal prior; do not retune individuals from one draw. Audit all post-crash rebuilds consistently by repair scope and successful subsequent mileage; Hamilton's brake root cause was unconfirmed.
+- Longitudinal score baseline: mean RPS 0.09592, log loss 2.03034, win/podium/points Brier 0.02385/0.02940/0.10344, expected-rank MAE 3.268.

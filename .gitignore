@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv/
+.uv-cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# JavaScript and deployment output
+node_modules/
+.vercel/
+
+# Credentials and local configuration
+env.sh
+.env*
+!.env.example
+.DS_Store
+*.log
+*.tmp
+/runs/**/.memory.lock
+
+# Generated charts (saved forecasts and results are intentionally versioned)
+/charts/

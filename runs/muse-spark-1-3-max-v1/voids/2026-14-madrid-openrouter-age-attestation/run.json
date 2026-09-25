@@ -1,0 +1,38 @@
+{
+  "event_id": "2026-14-madrid",
+  "entrant": "muse-spark-1-3-max-v1",
+  "model": "meta/muse-spark-1.3",
+  "request_model": "meta/muse-spark-1.3-20260902",
+  "reasoning": {
+    "effort": "max"
+  },
+  "openrouter_provider": {
+    "order": [
+      "meta"
+    ],
+    "only": [
+      "meta"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "openrouter_cost_policy": "cost_or_upstream_inference_cost",
+  "budgets": {
+    "wall_minutes": 120,
+    "model_usd": 30.0,
+    "cpus": 4.0
+  },
+  "image": "f1bench-agent:0.3.0",
+  "network": "bridge",
+  "wrapper_version": "0.7.0",
+  "mini_swe_agent_version": "2.4.6",
+  "prompt_sha256": "28c1d92d4d7fa0d68deb97e01f94e4a6220dec7f161270586e6d1fa833d62106",
+  "event_sha256": "30c9d6e89cf328980cd7c442c3b3eae776f952bc49e6e110a083e747d2c0a846",
+  "started_at": "2026-09-13T06:52:23.120342+00:00",
+  "status": "failed",
+  "finished_at": "2026-09-13T06:56:37.328338+00:00",
+  "runtime_seconds": 254.2075796249992,
+  "error": "OpenRouterAPIError",
+  "error_message": "HTTP 403: {\"error\":{\"message\":\"This model requires you to complete the following before use: 18+ age confirmation. Confirm at https://openrouter.ai/settings/preferences.\",\"code\":403,\"metadata\":{\"missing_attestation_types\":[\"age_18plus\"],\"routing_funnel\":[{\"step\":\"Initial Endpoints\",\"endpoint_count\":1}],\"failed_routing_step\":\"Gate Endpoints with Attestations\"}},\"user_id\":\"user_2utcIFjlEcwGvLE6Qbwhg0sMrcc\"}",
+  "providers_used": []
+}

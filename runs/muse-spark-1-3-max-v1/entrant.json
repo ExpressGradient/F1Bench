@@ -1,0 +1,20 @@
+{
+  "entrant": "muse-spark-1-3-max-v1",
+  "model": "meta/muse-spark-1.3",
+  "reasoning_policy": "maximum_supported_at_creation",
+  "reasoning_config": {
+    "effort": "max"
+  },
+  "request_model": "meta/muse-spark-1.3-20260902",
+  "openrouter_provider": {
+    "order": [
+      "meta"
+    ],
+    "only": [
+      "meta"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "created_at": "2026-09-13T06:52:22.573602+00:00"
+}

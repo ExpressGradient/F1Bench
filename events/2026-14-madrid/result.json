@@ -1,0 +1,30 @@
+{
+  "event_id": "2026-14-madrid",
+  "classification": "final",
+  "source": "https://www.formula1.com/en/results/2026/races/1294/spain/race-result",
+  "recorded_at": "2026-09-14T09:17:09Z",
+  "results": [
+    {"driver_id": "ANT", "position": 1, "status": "classified", "retired": false},
+    {"driver_id": "VER", "position": 2, "status": "classified", "retired": false},
+    {"driver_id": "NOR", "position": 3, "status": "classified", "retired": false},
+    {"driver_id": "LEC", "position": 4, "status": "classified", "retired": false},
+    {"driver_id": "RUS", "position": 5, "status": "classified", "retired": false},
+    {"driver_id": "LAW", "position": 6, "status": "classified", "retired": false},
+    {"driver_id": "COL", "position": 7, "status": "classified", "retired": false},
+    {"driver_id": "PIA", "position": 8, "status": "classified", "retired": false},
+    {"driver_id": "LIN", "position": 9, "status": "classified", "retired": false},
+    {"driver_id": "HUL", "position": 10, "status": "classified", "retired": false},
+    {"driver_id": "OCO", "position": 11, "status": "classified", "retired": false},
+    {"driver_id": "GAS", "position": 12, "status": "classified", "retired": false},
+    {"driver_id": "BOR", "position": 13, "status": "classified", "retired": false},
+    {"driver_id": "TSU", "position": 14, "status": "classified", "retired": false},
+    {"driver_id": "ALB", "position": 15, "status": "classified", "retired": false},
+    {"driver_id": "BEA", "position": 16, "status": "classified", "retired": false},
+    {"driver_id": "ALO", "position": 17, "status": "classified", "retired": false},
+    {"driver_id": "BOT", "position": 18, "status": "classified", "retired": false},
+    {"driver_id": "SAI", "position": null, "status": "nc", "retired": true},
+    {"driver_id": "PER", "position": null, "status": "nc", "retired": true},
+    {"driver_id": "STR", "position": null, "status": "nc", "retired": true},
+    {"driver_id": "HAM", "position": null, "status": "nc", "retired": true}
+  ]
+}

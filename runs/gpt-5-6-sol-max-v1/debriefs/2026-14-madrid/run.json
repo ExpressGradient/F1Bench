@@ -1,0 +1,50 @@
+{
+  "event_id": "2026-14-madrid",
+  "entrant": "gpt-5-6-sol-max-v1",
+  "model": "openai/gpt-5.6-sol",
+  "request_model": "openai/gpt-5.6-sol-20260709",
+  "reasoning": {
+    "effort": "max"
+  },
+  "openrouter_provider": {
+    "order": [
+      "openai",
+      "azure",
+      "amazon-bedrock/us-east-1"
+    ],
+    "only": [
+      "openai",
+      "azure",
+      "amazon-bedrock/us-east-1"
+    ],
+    "ignore": [
+      "openai/flex"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "openrouter_cost_policy": "cost_or_upstream_inference_cost",
+  "budgets": {
+    "wall_minutes": 120,
+    "model_usd": 30.0,
+    "cpus": 4.0
+  },
+  "image": "f1bench-agent:0.3.0",
+  "network": "bridge",
+  "wrapper_version": "0.8.0",
+  "mini_swe_agent_version": "2.4.6",
+  "prompt_sha256": "258edde627b4a652fe79407cab66d04fe522387684f01481779adff4cdb17697",
+  "result_sha256": "58f70f99d0ed419cdae337473c358ee713385a924b7a8af41c4544d3d59560d0",
+  "prediction_sha256": "4d083f009134f87adbe7e9fe2dc45b42c4fedce1f31585741873341996d4da8e",
+  "notes_before_sha256": "42a692e30869f6680c860b373e6948e676386f6b43a78351e07e9f69d4e01331",
+  "started_at": "2026-09-14T09:18:37.351367+00:00",
+  "status": "completed",
+  "finished_at": "2026-09-14T09:24:33.418257+00:00",
+  "runtime_seconds": 356.06663616601145,
+  "cost_usd": 0.38068519500000003,
+  "model_calls": 24,
+  "providers_used": [
+    "OpenAI"
+  ],
+  "notes_after_sha256": "b3ea1b74bd93a96e81c653d884888164770f6580abe26347fb4f6c3fc5ccf408"
+}

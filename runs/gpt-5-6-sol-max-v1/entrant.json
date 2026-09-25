@@ -1,0 +1,27 @@
+{
+  "entrant": "gpt-5-6-sol-max-v1",
+  "model": "openai/gpt-5.6-sol",
+  "reasoning_policy": "maximum_supported_at_creation",
+  "reasoning_config": {
+    "effort": "max"
+  },
+  "request_model": "openai/gpt-5.6-sol-20260709",
+  "openrouter_provider": {
+    "order": [
+      "openai",
+      "azure",
+      "amazon-bedrock/us-east-1"
+    ],
+    "only": [
+      "openai",
+      "azure",
+      "amazon-bedrock/us-east-1"
+    ],
+    "ignore": [
+      "openai/flex"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "created_at": "2026-09-13T06:52:22.112624+00:00"
+}
