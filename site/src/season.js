@@ -94,6 +94,12 @@ export function seasonSummary(races, season) {
     );
   return {
     models,
+    baseline:
+      shared.length &&
+      shared.every((race) => Number.isFinite(race.baseline?.score))
+        ? shared.reduce((sum, race) => sum + race.baseline.score, 0) /
+          shared.length
+        : null,
     progression,
     leaderboard,
     excluded: completed.length - shared.length,

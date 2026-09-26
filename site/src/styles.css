@@ -236,6 +236,7 @@ tbody tr:last-child th {
   margin: 0 0 10px;
 }
 .benchmark-title p {
+  max-width: 65ch;
   font-size: var(--text-body);
   color: var(--muted);
   margin: 0;
@@ -640,7 +641,7 @@ tbody tr:last-child th {
   font-size: var(--text-caption);
 }
 .driver-table {
-  min-width: 590px;
+  min-width: 520px;
 }
 .driver-table td {
   font: var(--text-caption) var(--mono);
@@ -710,7 +711,7 @@ tbody tr:last-child th {
   padding: 18px;
 }
 .driver-detail p {
-  font: var(--text-data)/1.75 var(--sans);
+  font: var(--text-data) / 1.75 var(--sans);
   margin: 0 0 16px;
 }
 .rank-explanation {
@@ -898,7 +899,7 @@ tbody tr:last-child th {
   overflow-x: auto;
 }
 .note code {
-  font: var(--text-caption)/1.8 var(--mono);
+  font: var(--text-caption) / 1.8 var(--mono);
 }
 .note td,
 .note th {
@@ -989,6 +990,108 @@ tbody tr:last-child th {
   border-radius: 4px;
   padding: 10px 16px;
   min-height: 40px;
+}
+
+.race-result {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 18px 0;
+  border-block: 1px solid var(--line);
+  font-size: var(--text-ui);
+}
+.race-result ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.race-result li span {
+  color: var(--muted);
+  font: var(--text-caption) var(--mono);
+  margin-right: 6px;
+}
+.race-result a,
+.baseline-note a,
+.forecast-links a,
+.score-drivers a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.score-story {
+  font-size: var(--text-ui);
+  max-width: 85ch;
+}
+.baseline-row {
+  background: var(--soft);
+  color: var(--muted);
+}
+.baseline-note {
+  font-size: var(--text-ui);
+  color: var(--muted);
+  margin: 12px 0;
+}
+.baseline-note summary {
+  color: var(--ink);
+  padding: 8px 0;
+}
+.baseline-note p {
+  max-width: 80ch;
+}
+.driver-comparison {
+  padding: 24px 0;
+  border-block: 1px solid var(--line);
+}
+.comparison-table {
+  min-width: 320px;
+}
+.comparison-table tbody th,
+.score-drivers tbody th {
+  font-weight: 500;
+}
+.forecast-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: var(--text-caption);
+  margin-bottom: 16px;
+}
+.score-drivers {
+  margin-bottom: 24px;
+  border-block: 1px solid var(--line);
+  font-size: var(--text-ui);
+}
+.score-drivers summary {
+  padding: 14px 0;
+  font-weight: 500;
+}
+.score-drivers .score-table {
+  min-width: 330px;
+}
+.protocol-summary {
+  max-width: 85ch;
+  font-size: var(--text-ui);
+  color: var(--muted);
+}
+.protocol-summary strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+@media (max-width: 600px) {
+  .driver-comparison .analysis-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .race-result ol {
+    flex-direction: column;
+  }
+  .driver-comparison select {
+    width: 100%;
+  }
 }
 
 @media (max-width: 850px) {

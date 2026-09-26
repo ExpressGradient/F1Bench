@@ -23,7 +23,7 @@ export const metadata = {
     template: "%s · F1 Bench",
   },
   description:
-    "Compare Formula 1 forecasts by accuracy, model spend, and runtime. Frozen predictions, official results, and original research.",
+    "How well can AI predict Formula 1? Compare models’ pre-race predictions with real results, plus the cost and time of each forecast.",
   openGraph: {
     type: "website",
     siteName: "F1 Bench",
@@ -55,7 +55,7 @@ export default function RootLayout({ children }) {
             <nav aria-label="Primary">
               <Link href="/">Benchmark</Link>
               <Link href="/#races">Races</Link>
-              <Link href="/#methodology">Methodology</Link>
+              <Link href="/#methodology">How it works</Link>
             </nav>
           </div>
         </header>
@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
           <Link className="brand" href="/">
             F1 BENCH
           </Link>
-          <p>Frozen forecasts. Official classifications.</p>
+          <p>AI predictions, checked against real races.</p>
           <a href="https://saipraneeth.in" target="_blank" rel="noreferrer">
             By Sai Praneeth ↗
           </a>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { seasonSummary, runUsage, money, duration } from "./season";
 import Methodology from "./Methodology";
 import { modelColor } from "./brands";
+import { BaselineNote } from "./Evaluation";
 
 const fmt = (value) => (Number.isFinite(value) ? value.toFixed(4) : "—");
 const shortRace = (race) => race.name.split(/\s+[—–]\s+/).at(-1);
@@ -27,7 +28,7 @@ function Efficiency({ models }) {
   return (
     <section className="analysis-section">
       <div className="analysis-heading">
-        <h2>Accuracy vs. resources</h2>
+        <h2>Forecast error vs. cost & time</h2>
         <div
           className="metric-switch"
           role="group"
@@ -48,14 +49,16 @@ function Efficiency({ models }) {
         </div>
       </div>
       <p className="chart-caption">
-        Lower left is better · averages per scored forecast
+        Lower left means less error for less money or time.
       </p>
       {points.length ? (
         <svg
           className="compact-chart"
           viewBox="0 0 460 222"
           role="img"
-          aria-label={`Mean RPS versus average ${metric === "cost" ? "model spend" : "runtime"}. Exact values in the leaderboard.`}
+          aria-label={`Mean RPS versus average ${
+            metric === "cost" ? "model spend" : "runtime"
+          }. Exact values in the leaderboard.`}
         >
           {[0, 1, 2].map((n) => {
             const value = minY + ((maxY - minY) * n) / 2;
@@ -77,9 +80,9 @@ function Efficiency({ models }) {
             );
           })}
           <text x="56" y="14">
-            RPS ↓
+            Error (RPS) ↓
           </text>
-          {points.map((m) => (
+          {points.map((m, index) => (
             <g key={m.entrant}>
               <circle
                 cx={x(m.usage[metric].average)}
@@ -89,12 +92,16 @@ function Efficiency({ models }) {
               />
               <text
                 x={x(m.usage[metric].average) + 10}
-                y={y(m.score) - 8}
+                y={y(m.score) + (index % 2 ? 18 : -10)}
                 className="point-label"
               >
-                {models.findIndex((entry) => entry.score === m.score) + 1}
+                {m.name.split(" ")[0]}
               </text>
-              <title>{`${m.name}: ${fmt(m.score)} RPS, ${metric === "cost" ? money(m.usage.cost.average) : duration(m.usage.seconds.average)}`}</title>
+              <title>{`${m.name}: ${fmt(m.score)} RPS, ${
+                metric === "cost"
+                  ? money(m.usage.cost.average)
+                  : duration(m.usage.seconds.average)
+              }`}</title>
             </g>
           ))}
         </svg>
@@ -116,12 +123,24 @@ function Progression({ models, progression, onRace }) {
   const low = values.length ? Math.max(0, Math.min(...values) - 0.015) : 0;
   const high = values.length ? Math.max(...values) + 0.015 : 1;
   const x = (i) =>
-    progression.length === 1 ? 245 : 62 + (i * 335) / (progression.length - 1);
+    progression.length === 1 ? 200 : 62 + (i * 260) / (progression.length - 1);
   const y = (v) => 28 + ((high - v) / (high - low)) * 150;
+  const endLabels = progression.length
+    ? models
+        .map((m) => ({
+          model: m,
+          y: y(progression.at(-1).values[m.entrant][mode]),
+        }))
+        .sort((a, b) => a.y - b.y)
+    : [];
+  endLabels.forEach((label, i) => {
+    label.labelY = Math.max(label.y, i ? endLabels[i - 1].labelY + 18 : 28);
+  });
+  const labelOffset = Math.max(0, (endLabels.at(-1)?.labelY ?? 0) - 178);
   return (
     <section className="analysis-section">
       <div className="analysis-heading">
-        <h2>Across races</h2>
+        <h2>Forecast error by race</h2>
         <div
           className="metric-switch"
           role="group"
@@ -164,7 +183,7 @@ function Progression({ models, progression, onRace }) {
             );
           })}
           <text x="56" y="14">
-            RPS ↓
+            Error (RPS) ↓
           </text>
           {models.map((m) => (
             <g key={m.entrant}>
@@ -184,9 +203,28 @@ function Progression({ models, progression, onRace }) {
                   r="3.5"
                   fill={modelColor(m.model)}
                 >
-                  <title>{`${m.name} · R${p.round}: ${fmt(p.values[m.entrant][mode])}`}</title>
+                  <title>{`${m.name} · R${p.round}: ${fmt(
+                    p.values[m.entrant][mode],
+                  )}`}</title>
                 </circle>
               ))}
+            </g>
+          ))}
+          {endLabels.map(({ model, y: pointY, labelY }) => (
+            <g key={model.entrant}>
+              <line
+                x1={x(progression.length - 1) + 5}
+                x2={x(progression.length - 1) + 15}
+                y1={pointY}
+                y2={labelY - labelOffset}
+              />
+              <text
+                x={x(progression.length - 1) + 19}
+                y={labelY - labelOffset + 4}
+                className="point-label"
+              >
+                {model.name.split(" ")[0]}
+              </text>
             </g>
           ))}
           {progression.map((p, i) => (
@@ -195,7 +233,9 @@ function Progression({ models, progression, onRace }) {
               role="button"
               tabIndex={0}
               className="round-target"
-              aria-label={`Open round ${p.round}: ${p.name}. ${models.map((m) => `${m.name}: ${fmt(p.values[m.entrant][mode])} RPS`).join("; ")}`}
+              aria-label={`Open round ${p.round}: ${p.name}. ${models
+                .map((m) => `${m.name}: ${fmt(p.values[m.entrant][mode])} RPS`)
+                .join("; ")}`}
               onClick={() => onRace(p.id)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
@@ -242,7 +282,7 @@ export default function SeasonBench({ races }) {
     const race = races.find((r) => r.id === requested);
     if (race) router.replace(`/races/${race.id}/${window.location.hash}`);
   }, [races, router]);
-  const { models, progression, leaderboard, excluded, completed } =
+  const { models, progression, leaderboard, excluded, completed, baseline } =
     seasonSummary(races, season);
   const [sort, setSort] = useState("score");
   const [direction, setDirection] = useState(1);
@@ -254,8 +294,8 @@ export default function SeasonBench({ races }) {
     key === "score"
       ? m.score
       : key === "total"
-        ? m.usage.cost.total
-        : m.usage[key].average;
+      ? m.usage.cost.total
+      : m.usage[key].average;
   const sorted = [...leaderboard].sort((a, b) => {
     const av = value(a, sort),
       bv = value(b, sort);
@@ -264,12 +304,12 @@ export default function SeasonBench({ races }) {
         ? 0
         : 1
       : bv === null
-        ? -1
-        : (av - bv) * direction;
+      ? -1
+      : (av - bv) * direction;
   });
   const headers = [
-    ["score", "RPS", "Mean "],
-    ["cost", "Cost", "/forecast"],
+    ["score", "Error", "Avg. "],
+    ["cost", "API cost", "/forecast"],
     ["seconds", "Time", "/forecast"],
     ["total", "Total spend"],
   ];
@@ -281,8 +321,12 @@ export default function SeasonBench({ races }) {
     <section id="season" className="benchmark">
       <div className="benchmark-title">
         <div>
-          <h1>Formula 1 benchmark</h1>
-          <p>Pre-race forecasts. Official results. Accuracy, cost, and time.</p>
+          <h1>How well can AI predict Formula 1?</h1>
+          <p>
+            AI models research each race and predict every driver’s finish. We
+            compare their predictions with the real results, plus what each
+            forecast cost and how long it took.
+          </p>
         </div>
         <label className="season-picker">
           <span>Season</span>
@@ -307,8 +351,8 @@ export default function SeasonBench({ races }) {
         </p>
         <p>
           <strong>RPS is the error score: lower is better.</strong> Zero is
-          perfect; 0.12 does not mean 12% accuracy. Cost and time show the average
-          dollars and minutes used to make one race forecast.
+          perfect; 0.12 does not mean 12% accuracy. Cost and time show the
+          average dollars and minutes used to make one race forecast.
         </p>
         <p>
           Compare models on the same races. A small lead over just a few races
@@ -319,10 +363,17 @@ export default function SeasonBench({ races }) {
         <div className="analysis-heading">
           <h2 id="standings-heading">Model standings</h2>
           <span className="subtle">
-            {models.length} models · {progression.length} shared races · lower
-            RPS is better
+            {models.length} models ·{" "}
+            {progression.length < 10 ? "Early results · " : ""}
+            {progression.length} races compared
           </span>
         </div>
+        <p className="table-caption">
+          Lower error means better predictions. We use RPS: 0 is perfect; 0.12
+          does not mean 12% accuracy.
+          {progression.length < 10 &&
+            " Too few races to establish a reliable winner."}
+        </p>
         <div
           className="table-scroll"
           tabIndex={0}
@@ -406,19 +457,33 @@ export default function SeasonBench({ races }) {
                   </td>
                 </tr>
               ))}
+              {baseline !== null && (
+                <tr className="baseline-row">
+                  <td className="rank-cell">—</td>
+                  <th scope="row">Grid baseline</th>
+                  <td className="numeric">{fmt(baseline)}</td>
+                  <td className="numeric">—</td>
+                  <td className="numeric">—</td>
+                  <td className="numeric">—</td>
+                  <td className="numeric">
+                    {progression.length}/{progression.length}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         <p className="mobile-table-hint">
-          Scroll for total spend and coverage →
+          Scroll for total spend and races scored →
         </p>
         {!models.length && (
           <p className="chart-empty">No forecasts in this season yet.</p>
         )}
         <div className="benchmark-footnote">
           <p>
-            Cost and time cover the {progression.length} shared, scored
-            forecasts per model. Model spend in USD; wall time in minutes.
+            Averages use the same {progression.length} races for every model.
+            API cost is model usage in USD; time is how long the forecast took.
+            Reviews, retries, search fees, and hosting are excluded.
           </p>
           <details>
             <summary>What’s included</summary>
@@ -432,6 +497,7 @@ export default function SeasonBench({ races }) {
             </p>
           </details>
         </div>
+        <BaselineNote />
         {excluded > 0 && (
           <p className="data-notice">
             {excluded} partially scored{" "}
@@ -449,7 +515,9 @@ export default function SeasonBench({ races }) {
             />
             {m.score === null
               ? ""
-              : `${leaderboard.findIndex((entry) => entry.score === m.score) + 1} · `}
+              : `${
+                  leaderboard.findIndex((entry) => entry.score === m.score) + 1
+                } · `}
             {m.name}
           </span>
         ))}
@@ -464,14 +532,14 @@ export default function SeasonBench({ races }) {
       </div>
       <section id="races" className="race-breakdown">
         <div className="analysis-heading">
-          <h2>Race breakdown</h2>
+          <h2>Compare a race</h2>
           <div
             className="metric-switch"
             role="group"
             aria-label="Race table metric"
           >
             {[
-              ["score", "RPS"],
+              ["score", "Error"],
               ["cost", "Cost"],
               ["seconds", "Time"],
             ].map(([key, label]) => (
@@ -527,8 +595,8 @@ export default function SeasonBench({ races }) {
                         {raceMetric === "score"
                           ? fmt(f?.metrics?.mean_rps)
                           : raceMetric === "cost"
-                            ? money(usage.cost)
-                            : duration(usage.seconds)}
+                          ? money(usage.cost)
+                          : duration(usage.seconds)}
                       </td>
                     );
                   })}
@@ -540,11 +608,11 @@ export default function SeasonBench({ races }) {
         </div>
         <p className="chart-caption">
           {raceMetric === "score"
-            ? "RPS · lower is better."
+            ? "Forecast error (RPS) · lower is better."
             : raceMetric === "cost"
-              ? "USD · successful forecast runs only."
-              : "Wall time in minutes · successful forecast runs only."}{" "}
-          Select a race for predictions, research, and run details.
+            ? "USD · successful forecast runs only."
+            : "Time taken to make each forecast."}{" "}
+          Open a race to compare predictions with results.
         </p>
       </section>
       <Methodology />

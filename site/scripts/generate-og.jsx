@@ -91,7 +91,7 @@ function Card({ title, subtitle, rows, perForecast }) {
             "#",
             "Model",
             perForecast ? "Mean RPS" : "Race RPS",
-            perForecast ? "Cost / forecast" : "Cost",
+            perForecast ? "API $ / forecast" : "API cost",
             perForecast ? "Time / forecast" : "Time",
           ].map((label, i) => (
             <div
@@ -227,7 +227,9 @@ const season = notebook.races.at(-1)?.season;
 const { leaderboard, progression } = seasonSummary(notebook.races, season);
 await writeCard("og.png", {
   title: "Formula 1 benchmark",
-  subtitle: `${season ? `${season} season · ` : ""}${leaderboard.length} models · ${progression.length} shared races`,
+  subtitle: `${season ? `${season} season · ` : ""}${
+    leaderboard.length
+  } models · ${progression.length} shared races`,
   perForecast: true,
   rows: leaderboard.map((model) => ({
     ...model,

@@ -18,7 +18,7 @@
     "build": "bun run data && bun run og && next build",
     "preview": "python3 -m http.server 4173 --directory out",
     "data": "bun scripts/export-data.mjs",
-    "test": "bun test src/season.test.js"
+    "test": "bun test src/*.test.js"
   },
   "type": "module"
 }

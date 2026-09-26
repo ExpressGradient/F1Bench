@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import RacePage from "../../../src/RacePage";
 import { seasonSummary } from "../../../src/season";
 import notebook from "../../../public/data.json";
+import { gridBaseline } from "../../../src/evaluation";
 
 export function generateStaticParams() {
   return notebook.races.map(({ id }) => ({ id }));
@@ -53,7 +54,7 @@ export default async function Race({ params }) {
   return (
     <RacePage
       key={race.id}
-      race={race}
+      race={{ ...race, baseline: gridBaseline(race) }}
       raceList={raceList}
       standings={leaderboard}
       sharedRaces={progression.length}

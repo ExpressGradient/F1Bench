@@ -13,7 +13,9 @@ bun test
 bun run build
 ```
 
-The build exports public benchmark data from the saved races and generates the season share card at `og.png` and race cards under `og/`. Only `site/out/` is served; raw trajectories and local environment files are not website assets.
+The build exports public benchmark data from the saved races and generates the season share card at `og.png` and race cards under `og/`. Under `records/`, it copies submitted predictions and reports plus the original system/user instructions, checked against saved prompt hashes. It does not publish research trajectories or tool output. Only `site/out/` is served; local environment files are not website assets.
+
+`site/src/grids.json` records the official starting orders and source URLs for the retrospective grid baseline. New races without a verified grid show no baseline; the season baseline is available only when it covers the same races as every compared model. The rule always predicts the listed starting position with certainty and uses the existing RPS normalization.
 
 ## Vercel production
 

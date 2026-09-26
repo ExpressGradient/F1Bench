@@ -6,10 +6,26 @@ import { useRouter } from "next/navigation";
 import { sortDrivers, runUsage, money, duration } from "./season";
 import Notes, { Note } from "./Notes.jsx";
 import { modelColor } from "./brands";
+import { scoreGains } from "./evaluation";
+import {
+  RaceResult,
+  BaselineNote,
+  DriverComparison,
+  ScoreDrivers,
+  scoringCode,
+} from "./Evaluation";
 
 const percent = (value) => `${(value * 100).toFixed(1)}%`;
 const number = (value, digits = 4) =>
   Number.isFinite(value) ? value.toFixed(digits) : "—";
+const utc = (value) =>
+  value
+    ? new Date(value).toLocaleString("en-GB", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "UTC",
+      }) + " UTC"
+    : "Not recorded";
 const labels = {
   pending: "Not run",
   running: "Researching",
@@ -36,7 +52,7 @@ function DriverTable({ forecast, race }) {
     <section id="forecast" className="field panel">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">Driver forecasts</span>
+          <span className="eyebrow">Before the race</span>
           <h2>
             {forecast.report ? "Predicted order" : "Forecast probabilities"}
           </h2>
@@ -48,7 +64,7 @@ function DriverTable({ forecast, race }) {
           Order by
           <select value={sort} onChange={(e) => setSort(e.target.value)}>
             {forecast.report && (
-              <option value="call">Model’s finishing-order call</option>
+              <option value="call">Predicted finishing order</option>
             )}
             <option value="expected">Average rank (all outcomes)</option>
             <option value="podium">Podium chance (highest first)</option>
@@ -57,10 +73,12 @@ function DriverTable({ forecast, race }) {
       </div>
       <p className="table-caption">
         {sort === "call"
-          ? "The model’s explicit finishing-order call."
+          ? "The order this model predicted before the race. Percentages show its estimated chances, not what happened."
           : sort === "podium"
-            ? "Sorted by the probability of a top-three finish. This is not a predicted finishing order."
-            : `Sorted by average rank across all outcomes. NC, DNS and DSQ count as rank ${forecast.rows.length + 1}; a larger downside risk can outweigh a higher podium chance.`}
+          ? "Sorted by the probability of a top-three finish. This is not a predicted finishing order."
+          : `Sorted by average rank across all outcomes. NC, DNS and DSQ count as rank ${
+              forecast.rows.length + 1
+            }; a larger downside risk can outweigh a higher podium chance.`}
         {!forecast.report &&
           " This archived run saved probabilities, not an explicit finishing-order pick."}{" "}
         Select a driver for details.
@@ -71,16 +89,19 @@ function DriverTable({ forecast, race }) {
             <tr>
               <th scope="col">{sort === "call" ? "Pick" : "Order"}</th>
               <th scope="col">Driver</th>
-              <th
-                scope="col"
-                title="Average rank including non-classification risk"
-              >
-                Avg rank
+              <th scope="col" title="Chance of winning the race">
+                Win
               </th>
-              <th scope="col">Podium</th>
-              <th scope="col">Points</th>
-              <th scope="col">Retire</th>
-              {race.result && <th scope="col">Actual</th>}
+              <th scope="col" title="Chance of finishing in the top three">
+                Top 3
+              </th>
+              <th scope="col" title="Chance of finishing in the top ten">
+                Top 10
+              </th>
+              <th scope="col" title="Chance of retiring before the finish">
+                Retire
+              </th>
+              {race.result && <th scope="col">Result</th>}
             </tr>
           </thead>
           <tbody>
@@ -109,9 +130,7 @@ function DriverTable({ forecast, race }) {
                         </span>
                       </button>
                     </td>
-                    <td className="expected-rank">
-                      {number(row.expected_rank, 2)}
-                    </td>
+                    <td>{percent(row.win)}</td>
                     <td>
                       <span
                         className="probability"
@@ -125,7 +144,11 @@ function DriverTable({ forecast, race }) {
                     {race.result && (
                       <td>
                         <span
-                          className={`actual ${truth?.position === forecastRanks.get(row.id) ? "match" : ""}`}
+                          className={`actual ${
+                            truth?.position === forecastRanks.get(row.id)
+                              ? "match"
+                              : ""
+                          }`}
                           title={
                             truth?.position === forecastRanks.get(row.id)
                               ? forecast.report
@@ -153,7 +176,9 @@ function DriverTable({ forecast, race }) {
                         </p>
                         <p className="rank-explanation">
                           Average rank:{" "}
-                          <strong>{number(row.expected_rank, 2)}</strong>.
+                          <strong>{number(row.expected_rank, 2)}</strong>. This
+                          averages every possible outcome, including bad
+                          finishes; it is not another finishing-order pick.{" "}
                           Chance of no classified position:{" "}
                           <strong>
                             {percent(
@@ -210,63 +235,81 @@ function DriverTable({ forecast, race }) {
   );
 }
 
-function Research({ forecast }) {
+function Research({ forecast, race }) {
   const report = forecast.report;
+  const favourite = forecast.rows.reduce(
+    (best, row) => (!best || row.win > best.win ? row : best),
+    null,
+  );
   return (
     <aside id="research" className="research">
       <section className="research-intro">
-        <span className="eyebrow">Model research</span>
-        <h2>Research & reasoning</h2>
-        <p>The model’s analysis, assumptions, and sources.</p>
+        <h2>Why it predicted this</h2>
+        <p>
+          {forecast.name}’s own explanation, written before the race: the
+          evidence it used, its assumptions, and what could go wrong. Its claims
+          are not independently verified.
+        </p>
       </section>
+      {favourite && (
+        <section className="insight lead">
+          <span className="eyebrow">Its favourite to win</span>
+          <p>
+            <strong>{favourite.name}</strong> · {percent(favourite.win)} chance
+          </p>
+        </section>
+      )}
       {report ? (
         <>
-          <section className="insight lead">
-            <span className="eyebrow">Race outlook</span>
-            <p>{report.summary}</p>
-          </section>
-          {report.insights.map((insight, i) => (
-            <article className="insight" key={i}>
-              <span className="eyebrow">
-                Research finding {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3>{insight.claim}</h3>
-              <p>{insight.impact}</p>
-              <div className="check">
-                <strong>What to watch</strong>
-                <p>{insight.check}</p>
-              </div>
-              <div className="source-links">
-                {insight.sources.map((id) => {
-                  const source = report.sources.find((s) => s.id === id);
-                  return source ? (
-                    <a
-                      href={source.url}
-                      key={id}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {source.title} ↗
-                    </a>
-                  ) : null;
-                })}
-              </div>
-            </article>
-          ))}
-          <section className="insight uncertainty">
-            <span className="eyebrow">What could change the race</span>
-            <p>{report.uncertainty}</p>
-          </section>
           <details className="note-panel">
-            <summary>Research method & sources</summary>
-            <p>{report.method}</p>
-            <div className="source-links">
-              {report.sources.map((s) => (
-                <a key={s.id} href={s.url} target="_blank" rel="noreferrer">
-                  {s.title} ↗
-                </a>
-              ))}
-            </div>
+            <summary>Its pre-race outlook · original text</summary>
+            <p>{report.summary}</p>
+          </details>
+          <details className="note-panel">
+            <summary>Why it chose this order</summary>
+            {report.insights.map((insight, i) => (
+              <article className="insight" key={i}>
+                <span className="eyebrow">
+                  Reason {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3>{insight.claim}</h3>
+                <p>{insight.impact}</p>
+                <div className="check">
+                  <strong>What it planned to watch</strong>
+                  <p>{insight.check}</p>
+                </div>
+                <div className="source-links">
+                  {insight.sources.map((id) => {
+                    const source = report.sources.find((s) => s.id === id);
+                    return source ? (
+                      <a
+                        href={source.url}
+                        key={id}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {source.title} ↗
+                      </a>
+                    ) : null;
+                  })}
+                </div>
+              </article>
+            ))}
+            <section className="insight uncertainty">
+              <span className="eyebrow">Where it could be wrong</span>
+              <p>{report.uncertainty}</p>
+            </section>
+            <details className="note-panel">
+              <summary>Research method & sources</summary>
+              <p>{report.method}</p>
+              <div className="source-links">
+                {report.sources.map((s) => (
+                  <a key={s.id} href={s.url} target="_blank" rel="noreferrer">
+                    {s.title} ↗
+                  </a>
+                ))}
+              </div>
+            </details>
           </details>
         </>
       ) : (
@@ -278,7 +321,7 @@ function Research({ forecast }) {
 
       {report && forecast.explanation && (
         <details className="note-panel">
-          <summary>Extended research note</summary>
+          <summary>Full pre-race research note</summary>
           <Note text={forecast.explanation} />
         </details>
       )}
@@ -287,13 +330,14 @@ function Research({ forecast }) {
           key={forecast.entrant + "-review"}
           text={forecast.review}
           kind="review"
+          race={race}
         />
       ) : (
         <p className="notes-context">Post-race review pending.</p>
       )}
       {forecast.run_details && (
         <details className="run-details">
-          <summary>Run details</summary>
+          <summary>Model setup & usage</summary>
           <dl>
             <dt>Model version</dt>
             <dd>{forecast.run_details.model}</dd>
@@ -306,7 +350,7 @@ function Research({ forecast }) {
             </dd>
             <dt>Runtime</dt>
             <dd>{duration(runUsage(forecast).seconds)}</dd>
-            <dt>Model spend</dt>
+            <dt>Model API cost</dt>
             <dd>{money(runUsage(forecast).cost)}</dd>
             <dt>Model calls</dt>
             <dd>{forecast.run_details.model_calls ?? "Not recorded"}</dd>
@@ -315,6 +359,36 @@ function Research({ forecast }) {
               {forecast.run_details.providers?.join(", ") || "Not recorded"}
             </dd>
           </dl>
+          <p className="table-caption">
+            Web search, code execution, and notes from earlier races are part of
+            this model’s setup. Cost excludes reviews, failed attempts, search
+            fees, and hosting.
+          </p>
+          <dl>
+            <dt>Forecast started</dt>
+            <dd>{utc(forecast.started_at)}</dd>
+            <dt>Forecast saved</dt>
+            <dd>{utc(forecast.finished_at)}</dd>
+            <dt>Race started</dt>
+            <dd>{utc(race.race_start)}</dd>
+          </dl>
+          <div className="source-links">
+            {Object.entries(forecast.artifacts || {}).map(([key, url]) => (
+              <a key={key} href={url} target="_blank" rel="noreferrer">
+                {
+                  {
+                    prompt: "Original prompt",
+                    prediction: "Prediction JSON",
+                    report: "Original report",
+                  }[key]
+                }{" "}
+                ↗
+              </a>
+            ))}
+            <a href={scoringCode} target="_blank" rel="noreferrer">
+              Scoring code ↗
+            </a>
+          </div>
           {forecast.run_details.budgets && (
             <p>
               Run limits: {forecast.run_details.budgets.wall_minutes} minutes ·
@@ -332,20 +406,24 @@ function Scores({ race, standings, sharedRaces }) {
   const scored = race.forecasts
     .filter((f) => f.metrics)
     .sort((a, b) => a.metrics.mean_rps - b.metrics.mean_rps);
+  const gains =
+    scored.length > 1 && scored[0].metrics.mean_rps < scored[1].metrics.mean_rps
+      ? scoreGains(scored[0], scored[1], race.result).slice(0, 3)
+      : [];
   return (
     <section className="scores panel" id="scores">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">Evaluation</span>
-          <h2>Race scores</h2>
+          <span className="eyebrow">After the race</span>
+          <h2>How the models did</h2>
         </div>
         <span className="count">
           {scored.length}/{race.forecasts.length} scored
         </span>
       </div>
       <p className="table-caption">
-        RPS measures forecast error; lower is better. Cost and time are for the
-        saved forecast.
+        Predictions scored against the official result. Lower error (RPS) is
+        better; 0 is perfect. Cost and time cover making the prediction.
       </p>
       {scored.length ? (
         <div className="table-scroll">
@@ -353,11 +431,11 @@ function Scores({ race, standings, sharedRaces }) {
             <thead>
               <tr>
                 <th scope="col">Model</th>
-                <th scope="col">Race RPS</th>
-                <th scope="col">Cost</th>
+                <th scope="col">Error</th>
+                <th scope="col">API cost</th>
                 <th scope="col">Time</th>
                 <th scope="col">Rank error</th>
-                <th scope="col">Season RPS</th>
+                <th scope="col">Season error</th>
               </tr>
             </thead>
             <tbody>
@@ -385,14 +463,32 @@ function Scores({ race, standings, sharedRaces }) {
                   </td>
                 </tr>
               ))}
+              {race.baseline && (
+                <tr className="baseline-row">
+                  <th scope="row">Grid baseline</th>
+                  <td>{number(race.baseline.score)}</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       ) : (
         <div className="empty-inline">
-          Scores appear when the official classification is saved.
+          Scores will appear after the official race result is added.
         </div>
       )}
+      {gains.length > 0 && (
+        <p className="score-story">
+          <strong>{scored[0].name} scored best.</strong> Its biggest gains over{" "}
+          {scored[1].name} came from {gains.map((d) => d.name).join(", ")}.
+          Select a model below to inspect every driver’s contribution.
+        </p>
+      )}
+      <BaselineNote baseline={race.baseline} />
       <p className="table-foot">
         Season average: {sharedRaces} shared{" "}
         {sharedRaces === 1 ? "race" : "races"} in {race.season}. Rank error
@@ -410,13 +506,15 @@ export default function RacePage({ race, raceList, standings, sharedRaces }) {
       race.forecasts[0]?.entrant,
   );
   const forecast = race.forecasts.find((f) => f.entrant === entrant);
+  const secondsBeforeStart =
+    (Date.parse(race.race_start) - Date.parse(forecast?.finished_at)) / 1000;
   const titleParts = race.name.replace(/^\d{4}\s+/, "").split(/\s+[—–]\s+/);
   const title = titleParts.at(-1);
   return (
     <>
       <div className="season-bar">
         <Link className="back-link" href="/">
-          ← All results
+          ← Model standings
         </Link>
         <label className="race-select">
           <span>Race</span>
@@ -443,11 +541,16 @@ export default function RacePage({ race, raceList, standings, sharedRaces }) {
           </div>
           <h1>{title}</h1>
           <p>{titleParts.length > 1 ? titleParts[0] : "Race forecast"}</p>
+          <p>
+            Compare what each AI predicted before the race with what happened.
+          </p>
         </div>
       </section>
+      <RaceResult race={race} />
       <Scores race={race} standings={standings} sharedRaces={sharedRaces} />
+      <DriverComparison race={race} />
       <div className="model-toolbar">
-        <span className="eyebrow">Model</span>
+        <span className="eyebrow">View prediction</span>
         <div className="model-tabs" role="group" aria-label="Forecast model">
           {race.forecasts.map((f) => (
             <button
@@ -480,18 +583,42 @@ export default function RacePage({ race, raceList, standings, sharedRaces }) {
                 : "before the race"}
             </span>
             <span>
-              {forecast.report
-                ? "Original model order"
-                : "Derived order · original probabilities"}{" "}
+              {Number.isFinite(secondsBeforeStart)
+                ? secondsBeforeStart >= 0
+                  ? `Saved ${duration(
+                      secondsBeforeStart,
+                    )} before race start · original prediction`
+                  : "Saved after the scheduled race start"
+                : "Original saved prediction · timing not recorded"}
             </span>
           </div>
-          <div className="race-layout">
-            <DriverTable
-              key={forecast.entrant}
-              forecast={forecast}
-              race={race}
-            />
-            <Research forecast={forecast} />
+          <div className="forecast-links">
+            {forecast.artifacts?.prompt && (
+              <a
+                href={forecast.artifacts.prompt}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Original prompt ↗
+              </a>
+            )}
+            {forecast.artifacts?.prediction && (
+              <a
+                href={forecast.artifacts.prediction}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Prediction JSON ↗
+              </a>
+            )}
+            <a href={scoringCode} target="_blank" rel="noreferrer">
+              Scoring code ↗
+            </a>
+          </div>
+          <ScoreDrivers forecast={forecast} race={race} />
+          <div className="race-layout" key={forecast.entrant}>
+            <DriverTable forecast={forecast} race={race} />
+            <Research forecast={forecast} race={race} />
           </div>
         </>
       ) : (
@@ -503,8 +630,8 @@ export default function RacePage({ race, raceList, standings, sharedRaces }) {
             {forecast?.status === "failed"
               ? "This forecast didn’t finish."
               : forecast?.status === "running"
-                ? "Research is underway."
-                : "Forecast not available yet."}
+              ? "Research is underway."
+              : "Forecast not available yet."}
           </h2>
           <p>
             A complete forecast will appear here once this model finishes its

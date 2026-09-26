@@ -3,13 +3,19 @@ import React from "react";
 export default function Methodology() {
   return (
     <section className="methodology" id="methodology">
-      <h2>Methodology</h2>
+      <h2>How it works</h2>
       <p className="methodology-intro">
-        Independent, pre-race forecasts. Frozen predictions, official results,
-        and the same scoring rules for every model.
+        Predict before the race. Score after it. Review mistakes for the next
+        one.
+      </p>
+      <p className="protocol-summary">
+        Same race task and limits for every model. Web search, code execution,
+        and each model’s own notes from earlier races. Up to{" "}
+        <strong>$30 in model calls</strong> and <strong>120 minutes</strong> per
+        run. This tests a model using tools and memory, not an unaided answer.
       </p>
       <details>
-        <summary>What is being evaluated?</summary>
+        <summary>What are the models predicting?</summary>
         <div>
           <p>
             Each model forecasts the entire Formula 1 field using public
@@ -67,11 +73,11 @@ export default function Methodology() {
         </div>
       </details>
       <details>
-        <summary>Information, timing & persistent memory</summary>
+        <summary>Can models see the results? How do they learn?</summary>
         <div>
           <p>
             A forecast starts with the race entry list, the model’s own previous
-            forecasts and research, available official results, scores, review
+            forecasts and research, results from earlier races, scores, review
             snapshots, and its current notes. The normal workflow runs after
             qualifying. Agents independently verify current evidence, so
             research sources and completion times can differ.
@@ -96,9 +102,11 @@ export default function Methodology() {
         </div>
       </details>
       <details>
-        <summary>Primary score: Ranked Probability Score</summary>
+        <summary>What does the error score mean?</summary>
         <div>
           <p>
+            Ranked Probability Score (RPS) measures how far the predicted
+            chances were from what happened. Lower is better; zero is perfect.
             For each driver, the scorer compares the probability of finishing at
             or above every position with the official result. Errors farther
             from the outcome affect more thresholds. This rewards accurate
