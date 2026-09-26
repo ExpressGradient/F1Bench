@@ -13,7 +13,7 @@ A Formula 1 forecasting benchmark. Models research each race, predict every driv
 
 The current cohort is GPT-5.6 Sol, Muse Spark 1.3, and Grok 4.6. Each gets its highest supported reasoning setting, 4 CPUs, up to 120 minutes, and up to $30 of model spend per forecast. Models choose their own research and calculation methods. Settings and provider policies are recorded in [the cohort configuration](cohorts/frontier-v1.json).
 
-Mean Ranked Probability Score is the primary metric; lower is better. Season standings average only races scored for every configured model. The site compares accuracy, average cost and runtime per scored forecast, total model spend, and coverage on the same shared races. Race pages retain full-field probabilities, original research, reviews, and run details. Learning happens through saved history and notes, not weight training.
+Mean Ranked Probability Score is the primary metric; lower is better. Season standings average only races scored for every configured model. The site compares accuracy, average cost and runtime per scored forecast, and coverage on the same shared races. Total spend includes forecasts, reviews, and failed attempts across the season; missing fees stay explicitly untracked. Race pages retain full-field probabilities, original research, reviews, and run details. Learning happens through saved history and notes, not weight training.
 
 ## Run the website
 

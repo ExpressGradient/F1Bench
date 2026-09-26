@@ -7,6 +7,8 @@ import os
 import urllib.error
 import urllib.request
 
+from parallel_usage import begin, finish
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Extract web pages with Parallel.")
@@ -33,6 +35,7 @@ def main() -> None:
         headers={"Content-Type": "application/json", "x-api-key": key},
         method="POST",
     )
+    request_id = begin("extract", len(args.urls))
     try:
         with urllib.request.urlopen(request, timeout=180) as response:
             result = json.load(response)
@@ -41,6 +44,7 @@ def main() -> None:
         raise SystemExit(f"Parallel extract failed ({error.code}): {detail}") from error
     except (urllib.error.URLError, TimeoutError) as error:
         raise SystemExit(f"Parallel extract failed: {error}") from error
+    finish(request_id, "extract", result)
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
 

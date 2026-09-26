@@ -13,13 +13,14 @@ export default function Home() {
       state,
       baseline: gridBaseline({ id, drivers, result }),
       forecasts: forecasts.map(
-        ({ entrant, name, model, metrics, run_details, cost_usd }) => ({
+        ({ entrant, name, model, metrics, run_details, cost_usd, costs }) => ({
           entrant,
           name,
           model,
           metrics,
           run_details,
           cost_usd,
+          costs,
         }),
       ),
     }),

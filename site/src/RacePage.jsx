@@ -1,5 +1,7 @@
 "use client";
 
+import CostBreakdown from "./CostBreakdown";
+import { costLabel, hasFullCosts } from "./costs";
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -359,11 +361,7 @@ function Research({ forecast, race }) {
               {forecast.run_details.providers?.join(", ") || "Not recorded"}
             </dd>
           </dl>
-          <p className="table-caption">
-            Web search, code execution, and notes from earlier races are part of
-            this model’s setup. Cost excludes reviews, failed attempts, search
-            fees, and hosting.
-          </p>
+          <CostBreakdown costs={forecast.costs} />
           <dl>
             <dt>Forecast started</dt>
             <dd>{utc(forecast.started_at)}</dd>
@@ -406,6 +404,7 @@ function Scores({ race, standings, sharedRaces }) {
   const scored = race.forecasts
     .filter((f) => f.metrics)
     .sort((a, b) => a.metrics.mean_rps - b.metrics.mean_rps);
+  const fullCost = hasFullCosts(scored.map((f) => f.costs?.forecast));
   const gains =
     scored.length > 1 && scored[0].metrics.mean_rps < scored[1].metrics.mean_rps
       ? scoreGains(scored[0], scored[1], race.result).slice(0, 3)
@@ -432,7 +431,7 @@ function Scores({ race, standings, sharedRaces }) {
               <tr>
                 <th scope="col">Model</th>
                 <th scope="col">Error</th>
-                <th scope="col">API cost</th>
+                <th scope="col">{fullCost ? "Forecast cost" : "Model API"}</th>
                 <th scope="col">Time</th>
                 <th scope="col">Rank error</th>
                 <th scope="col">Season error</th>
@@ -450,7 +449,11 @@ function Scores({ race, standings, sharedRaces }) {
                     </strong>
                   </td>
                   <td className="score-value">{number(f.metrics.mean_rps)}</td>
-                  <td>{money(runUsage(f).cost)}</td>
+                  <td>
+                    {fullCost
+                      ? costLabel(f.costs?.forecast)
+                      : money(runUsage(f).cost)}
+                  </td>
                   <td>{duration(runUsage(f).seconds)}</td>
                   <td>
                     {number(f.metrics.expected_rank_mae, 2)}{" "}
@@ -481,6 +484,11 @@ function Scores({ race, standings, sharedRaces }) {
           Scores will appear after the official race result is added.
         </div>
       )}
+      <p className="table-caption">
+        {fullCost
+          ? "Forecast cost includes model calls and research. ≈ marks estimates."
+          : "Model API costs exclude historical search and extraction fees."}
+      </p>
       {gains.length > 0 && (
         <p className="score-story">
           <strong>{scored[0].name} scored best.</strong> Its biggest gains over{" "}

@@ -133,3 +133,29 @@ runs/<entrant>/
 New `report.json` files contain `event_id`, `summary`, `order` (every driver exactly once), `reasons` (keyed by driver ID), `method`, `uncertainty`, `insights` and `sources`. Each insight has `claim`, `impact`, `check` and source IDs. Each source has `id`, `title` and an HTTP(S) `url`. Schema validation checks completeness and references; it cannot prove a claim is true. Research quality remains visible in the report and accountable to the review.
 
 Old forecasts need no report backfill. Their website order is explicitly derived from expected finishing rank, including non-classification risk, and their original explanations remain available. Existing prediction files, scores, notes and traces stay intact.
+
+## Cost accounting
+
+Rebuild the agent image with `uv run f1bench build` before the next run (default
+image `f1bench-agent:0.4.0`). The bundled search/extract tools save a request
+ledger, and the runner saves `research-usage.jsonl` plus `usage.json` before
+container cleanup, including failed runs. No paid calls are needed to export costs.
+
+Model API charges remain in `run.json`; `usage.json` also captures the model
+spend if an attempt fails before normal metadata completion. Research fees are
+**list-price estimates**, not invoices: advanced search is $0.005 per request
+with ten results included, plus $0.001 per additional result; extraction is
+$0.001 per returned URL. Rates were checked on 2026-09-26 against
+[Parallel pricing](https://docs.parallel.ai/getting-started/pricing). Search mode
+is explicitly fixed to the existing advanced default. Requests with an unknown
+outcome or partial extraction errors are unpriced, not assumed free. No API keys,
+queries, or page contents are written to this ledger.
+
+Tracking covers the bundled tools, not arbitrary direct API calls made by agent
+code, credits, discounts, or hosting. Historical runs have no research ledger;
+their original metadata is unchanged. The website uses model API costs for all
+entrants in a comparison when any research total is unavailable. Recorded spend
+is labelled separately from a complete total, and missing charges are explained
+once in the coverage note. `≈` identifies estimates. Forecast averages use shared scored races; total spend includes all
+saved forecast/review attempts, including archived failures and voids, for that
+model and season. A missing charge never counts as zero.

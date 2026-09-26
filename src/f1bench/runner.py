@@ -27,6 +27,7 @@ from minisweagent.environments.docker import DockerEnvironment, DockerEnvironmen
 from minisweagent.models.openrouter_model import OpenRouterModel
 
 from . import __version__ as wrapper_version
+from .costs import research_costs
 from .core import (
     BenchError,
     ID_PATTERN,
@@ -40,7 +41,7 @@ from .core import (
     parse_time,
 )
 
-DEFAULT_IMAGE = "f1bench-agent:0.3.0"
+DEFAULT_IMAGE = "f1bench-agent:0.4.0"
 COST_LIMIT_USD = 30.0
 WALL_TIME_SECONDS = 120 * 60
 CPUS = 4.0
@@ -390,6 +391,31 @@ def _docker_environment(*, image: str, model: str, network: str) -> DockerEnviro
     )
 
 
+def _start_usage(container: str) -> None:
+    subprocess.run(
+        [
+            "docker", "exec", "--user", "0", container, "sh", "-c",
+            "test -f /usr/local/bin/parallel_usage.py && "
+            "touch /tmp/f1bench-research.jsonl && chmod 0666 /tmp/f1bench-research.jsonl",
+        ],
+        check=True,
+    )
+
+
+def _save_usage(container: str, trajectory_path: Path, agent) -> None:
+    ledger = trajectory_path.with_name("research-usage.jsonl")
+    _copy_from_container(container, "/tmp/f1bench-research.jsonl", ledger, required=False)
+    _write_json(
+        trajectory_path.with_name("usage.json"),
+        {
+            "model_usd": agent.cost if agent is not None else None,
+            **research_costs(ledger),
+            "estimated": True,
+            "scope": "model API and bundled Parallel tools; excludes infrastructure",
+        },
+    )
+
+
 def _execute_agent(
     *,
     image: str,
@@ -409,7 +435,9 @@ def _execute_agent(
     container = environment.container_id
     if not container:
         raise BenchError("Docker did not return a container id")
+    agent = None
     try:
+        _start_usage(container)
         _copy_to_container(container, history, "/history")
         _copy_to_container(container, event_file, "/input/event.json")
         _copy_to_container(container, notes, "/memory/notes.md", archive=True)
@@ -472,7 +500,10 @@ def _execute_agent(
             agent.n_calls,
         )
     finally:
-        environment.cleanup()
+        try:
+            _save_usage(container, trajectory_path, agent)
+        finally:
+            environment.cleanup()
 
 
 def _execute_debrief_agent(
@@ -493,7 +524,9 @@ def _execute_debrief_agent(
     container = environment.container_id
     if not container:
         raise BenchError("Docker did not return a container id")
+    agent = None
     try:
+        _start_usage(container)
         _copy_to_container(container, history, "/history")
         _copy_to_container(container, inputs, "/input")
         _copy_to_container(container, notes, "/memory/notes.md", archive=True)
@@ -535,7 +568,10 @@ def _execute_debrief_agent(
         )
         return outcome, updated_notes, agent.cost, agent.n_calls
     finally:
-        environment.cleanup()
+        try:
+            _save_usage(container, trajectory_path, agent)
+        finally:
+            environment.cleanup()
 
 
 def _memory_lock(function):

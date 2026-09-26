@@ -1306,3 +1306,20 @@ tbody tr:last-child th {
     min-width: 460px;
   }
 }
+
+.spend-details {
+  margin-block: 1rem;
+}
+.spend-details h3 {
+  font-size: 1rem;
+  margin: 1.25rem 0 0.5rem;
+}
+.cost-breakdown {
+  width: 100%;
+  font-size: 0.8rem;
+}
+.cost-breakdown th,
+.cost-breakdown td {
+  white-space: nowrap;
+  padding: 0.6rem 0.75rem;
+}

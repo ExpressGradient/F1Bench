@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { seasonSummary, runUsage, money, duration } from "./season";
+import { costLabel, hasFullCosts, recordedCost } from "./costs";
 import Methodology from "./Methodology";
 import { modelColor } from "./brands";
 import { BaselineNote } from "./Evaluation";
@@ -28,7 +29,7 @@ function Efficiency({ models }) {
   return (
     <section className="analysis-section">
       <div className="analysis-heading">
-        <h2>Forecast error vs. cost & time</h2>
+        <h2>Forecast error vs. model cost & time</h2>
         <div
           className="metric-switch"
           role="group"
@@ -38,7 +39,7 @@ function Efficiency({ models }) {
             aria-pressed={metric === "cost"}
             onClick={() => setMetric("cost")}
           >
-            Cost
+            Model API
           </button>
           <button
             aria-pressed={metric === "seconds"}
@@ -58,7 +59,7 @@ function Efficiency({ models }) {
           role="img"
           aria-label={`Mean RPS versus average ${
             metric === "cost" ? "model spend" : "runtime"
-          }. Exact values in the leaderboard.`}
+          }. Model charges appear in the spend breakdown.`}
         >
           {[0, 1, 2].map((n) => {
             const value = minY + ((maxY - minY) * n) / 2;
@@ -290,11 +291,34 @@ export default function SeasonBench({ races }) {
   const events = races
     .filter((r) => r.season === season)
     .sort((a, b) => b.round - a.round);
+  const fullForecastCost = hasFullCosts(leaderboard.map((m) => m.forecastCost));
+  const fullSpend = hasFullCosts(leaderboard.map((m) => m.spending.total));
+  const fullRaceCost = hasFullCosts(
+    events.flatMap((r) =>
+      r.forecasts.filter((f) => f.metrics).map((f) => f.costs?.forecast),
+    ),
+  );
+  const spendColumns = [
+    ["forecast", "Forecasts"],
+    ["review", "Reviews"],
+    ["failed", "Failed attempts"],
+  ].filter(([key]) =>
+    leaderboard.some(
+      (m) =>
+        m.spending[key].runs > 0 &&
+        (m.spending[key].known_usd > 0 ||
+          Number.isFinite(m.spending[key].total_usd)),
+    ),
+  );
   const value = (m, key) =>
     key === "score"
       ? m.score
       : key === "total"
-      ? m.usage.cost.total
+      ? recordedCost(m.spending.total)
+      : key === "forecast"
+      ? fullForecastCost
+        ? m.forecastCost.total_usd / m.usage.count
+        : m.usage.cost.average
       : m.usage[key].average;
   const sorted = [...leaderboard].sort((a, b) => {
     const av = value(a, sort),
@@ -309,9 +333,9 @@ export default function SeasonBench({ races }) {
   });
   const headers = [
     ["score", "Error", "Avg. "],
-    ["cost", "API cost", "/forecast"],
+    ["forecast", fullForecastCost ? "Cost" : "Model API", "/forecast"],
     ["seconds", "Time", "/forecast"],
-    ["total", "Total spend"],
+    ["total", fullSpend ? "Total spend" : "Recorded spend"],
   ];
   function sortBy(key) {
     setSort(key);
@@ -441,9 +465,13 @@ export default function SeasonBench({ races }) {
                   <td className="numeric primary-score">{fmt(m.score)}</td>
                   <td
                     className="numeric"
-                    title={`${m.usage.cost.recorded}/${m.usage.count} costs recorded`}
+                    title={`Model API average: ${money(
+                      m.usage.cost.average,
+                    )}. Full breakdown below.`}
                   >
-                    {money(m.usage.cost.average)}
+                    {fullForecastCost
+                      ? costLabel(m.forecastCost, m.usage.count)
+                      : money(m.usage.cost.average)}
                   </td>
                   <td
                     className="numeric"
@@ -451,7 +479,7 @@ export default function SeasonBench({ races }) {
                   >
                     {duration(m.usage.seconds.average)}
                   </td>
-                  <td className="numeric">{money(m.usage.cost.total)}</td>
+                  <td className="numeric">{costLabel(m.spending.total)}</td>
                   <td className="numeric subtle">
                     {m.coverage}/{completed}
                   </td>
@@ -473,30 +501,68 @@ export default function SeasonBench({ races }) {
             </tbody>
           </table>
         </div>
-        <p className="mobile-table-hint">
-          Scroll for total spend and races scored →
-        </p>
+        <p className="mobile-table-hint">Scroll for spend and races scored →</p>
         {!models.length && (
           <p className="chart-empty">No forecasts in this season yet.</p>
         )}
         <div className="benchmark-footnote">
           <p>
-            Averages use the same {progression.length} races for every model.
-            API cost is model usage in USD; time is how long the forecast took.
-            Reviews, retries, search fees, and hosting are excluded.
+            Averages use the same {progression.length} races.
+            {fullForecastCost
+              ? " Forecast cost includes model calls and research."
+              : " Model API costs exclude historical search and extraction fees."}
+            {fullSpend
+              ? " Total spend includes reviews and failed attempts."
+              : " Recorded spend includes saved forecast and review charges."}
           </p>
           <details>
             <summary>What’s included</summary>
             <p>
-              Successful forecast runs only. Reviews, failed attempts, search
-              fees, and infrastructure are excluded. Totals and averages show —
-              if any shared run is missing that measurement. Scored counts all
-              races with a score, including those outside the shared comparison.
-              RPS is an error measure, so spend is shown alongside the score
-              rather than divided by it.
+              Forecast averages use shared scored races; total spend includes
+              all season races. Research fees on new runs are list-price
+              estimates (≈). Historical research fees and some failed-attempt
+              charges are unavailable; recorded spend is not a complete bill.
+              The cost chart uses model API costs only so historical runs remain
+              comparable. RPS is an error measure, so spend is shown alongside
+              the score rather than divided by it.
             </p>
           </details>
         </div>
+        <details className="spend-details">
+          <summary>Spend breakdown</summary>
+          <div className="table-scroll">
+            <table className="cost-breakdown">
+              <thead>
+                <tr>
+                  <th scope="col">Model</th>
+                  {spendColumns.map(([key, label]) => (
+                    <th scope="col" key={key}>
+                      {label}
+                    </th>
+                  ))}
+                  <th scope="col">{fullSpend ? "Total" : "Recorded"}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map((m) => (
+                  <tr key={m.entrant}>
+                    <th scope="row">{m.name}</th>
+                    {spendColumns.map(([key]) => (
+                      <td key={key}>{costLabel(m.spending[key])}</td>
+                    ))}
+                    <td>{costLabel(m.spending.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {!fullSpend && (
+            <p className="table-caption">
+              Excludes research fees and failed-attempt charges without saved
+              billing records.
+            </p>
+          )}
+        </details>
         <BaselineNote />
         {excluded > 0 && (
           <p className="data-notice">
@@ -540,7 +606,7 @@ export default function SeasonBench({ races }) {
           >
             {[
               ["score", "Error"],
-              ["cost", "Cost"],
+              ["cost", fullRaceCost ? "Cost" : "Model API"],
               ["seconds", "Time"],
             ].map(([key, label]) => (
               <button
@@ -595,7 +661,9 @@ export default function SeasonBench({ races }) {
                         {raceMetric === "score"
                           ? fmt(f?.metrics?.mean_rps)
                           : raceMetric === "cost"
-                          ? money(usage.cost)
+                          ? fullRaceCost
+                            ? costLabel(f?.costs?.forecast)
+                            : money(usage.cost)
                           : duration(usage.seconds)}
                       </td>
                     );
@@ -610,7 +678,9 @@ export default function SeasonBench({ races }) {
           {raceMetric === "score"
             ? "Forecast error (RPS) · lower is better."
             : raceMetric === "cost"
-            ? "USD · successful forecast runs only."
+            ? fullRaceCost
+              ? "USD · model calls + research."
+              : "Model API cost in USD · research fees excluded."
             : "Time taken to make each forecast."}{" "}
           Open a race to compare predictions with results.
         </p>

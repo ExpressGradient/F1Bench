@@ -1,3 +1,4 @@
+import { sumCosts } from "./costs";
 // Missing telemetry is unknown, never free or instantaneous.
 export function runUsage(forecast) {
   const valid = (value) =>
@@ -77,6 +78,26 @@ export function seasonSummary(races, season) {
       score: shared.length ? totals[model.entrant] / shared.length : null,
       usage: usageSummary(
         shared.map((r) => r.forecasts.find((f) => f.entrant === model.entrant)),
+      ),
+      forecastCost: sumCosts(
+        shared.map(
+          (r) =>
+            r.forecasts.find((f) => f.entrant === model.entrant)?.costs
+              ?.forecast,
+        ),
+      ),
+      spending: Object.fromEntries(
+        ["forecast", "review", "failed", "total"].map((phase) => [
+          phase,
+          sumCosts(
+            events.map(
+              (r) =>
+                r.forecasts.find((f) => f.entrant === model.entrant)?.costs?.[
+                  phase
+                ],
+            ),
+          ),
+        ]),
       ),
       coverage: completed.filter((r) =>
         valid(r.forecasts.find((f) => f.entrant === model.entrant)),

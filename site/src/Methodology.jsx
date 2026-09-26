@@ -61,14 +61,16 @@ export default function Methodology() {
             independently; they do not see competing forecasts.
           </p>
           <p>
-            The same limits apply to each post-race review. Reported cost is
-            model spend, not a complete infrastructure or external search bill.
-            The leaderboard shows average cost and wall time per scored
-            forecast, plus total spend, for the same shared races used by the
-            season score. Reviews, failed attempts, and external costs are
-            excluded. Missing measurements stay blank; they never count as zero.
-            Race details show the recorded configuration and individual run
-            measurements.
+            The same limits apply to each post-race review. Forecast cost
+            includes model API calls, search, and extraction. Total spend also
+            includes reviews and failed or voided attempts across all season
+            races. Forecast averages use the same shared races as the score.
+            Where research fees are unavailable, comparisons use model API costs
+            for every entrant. Recorded spend includes only saved charges and is
+            not a complete bill. New research costs are estimates from recorded
+            tool requests at published Parallel rates, before credits or
+            discounts. Historical research fees are unavailable. Hosting is
+            excluded.
           </p>
         </div>
       </details>

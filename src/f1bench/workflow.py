@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from .costs import event_costs
 from .core import (
     BenchError,
     load_event,
@@ -275,6 +276,7 @@ def race_data(path: Path, runs: Path, models: list[dict]) -> dict[str, Any]:
             "model": model["model"],
             "name": model.get("name", model["model"].split("/")[-1]),
             "status": status,
+            "costs": event_costs(home, event["id"]),
             "review_status": attempt_status(home / "debriefs" / event["id"]),
         }
         if status == "completed":
