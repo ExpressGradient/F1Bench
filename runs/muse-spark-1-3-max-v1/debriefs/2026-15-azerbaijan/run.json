@@ -1,0 +1,43 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "entrant": "muse-spark-1-3-max-v1",
+  "model": "meta/muse-spark-1.3",
+  "request_model": "meta/muse-spark-1.3-20260902",
+  "reasoning": {
+    "effort": "max"
+  },
+  "openrouter_provider": {
+    "order": [
+      "meta"
+    ],
+    "only": [
+      "meta"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "openrouter_cost_policy": "cost_or_upstream_inference_cost",
+  "budgets": {
+    "wall_minutes": 120,
+    "model_usd": 30.0,
+    "cpus": 4.0
+  },
+  "image": "f1bench-agent:0.3.0",
+  "network": "bridge",
+  "wrapper_version": "0.10.0",
+  "mini_swe_agent_version": "2.4.6",
+  "prompt_sha256": "4d607418ccb205066ce5c8e73d32638527973387fe2a742e5c6ba1945756cc49",
+  "result_sha256": "d141f8b27bf9a65a67d9850bfbca5fcb948cb9d286fd2f0bc96b7db0c238c604",
+  "prediction_sha256": "506f4b18e45c26bcdde48b32e09557ff5678fd60268433bad11046bad15ca8b4",
+  "notes_before_sha256": "77dd0fafb0c56b84cd622d8f0833061ef4619643b3a267ce0f534be4a7d8e9d1",
+  "started_at": "2026-09-26T15:37:22.720534+00:00",
+  "status": "completed",
+  "finished_at": "2026-09-26T15:42:01.998785+00:00",
+  "runtime_seconds": 279.27796454099007,
+  "cost_usd": 1.047078549,
+  "model_calls": 25,
+  "providers_used": [
+    "Meta"
+  ],
+  "notes_after_sha256": "822d88b4e27864b42f123a6605d85b1d8f40a880df3bf2cecc260c4bd99dd9c3"
+}

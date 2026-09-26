@@ -1,0 +1,45 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "entrant": "grok-4-6-xhigh-v1",
+  "model": "x-ai/grok-4.6",
+  "request_model": "x-ai/grok-4.6-20260810",
+  "reasoning": {
+    "effort": "xhigh"
+  },
+  "openrouter_provider": {
+    "order": [
+      "xai",
+      "amazon-bedrock/us-west-2"
+    ],
+    "only": [
+      "xai",
+      "amazon-bedrock/us-west-2"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "openrouter_cost_policy": "cost_or_upstream_inference_cost",
+  "budgets": {
+    "wall_minutes": 120,
+    "model_usd": 30.0,
+    "cpus": 4.0
+  },
+  "image": "f1bench-agent:0.3.0",
+  "network": "bridge",
+  "wrapper_version": "0.10.0",
+  "mini_swe_agent_version": "2.4.6",
+  "prompt_sha256": "4d607418ccb205066ce5c8e73d32638527973387fe2a742e5c6ba1945756cc49",
+  "result_sha256": "d141f8b27bf9a65a67d9850bfbca5fcb948cb9d286fd2f0bc96b7db0c238c604",
+  "prediction_sha256": "823a01e70bffd58fb8fa35482ba4d380f33116ab30bfe31a6aa6e2da629b7915",
+  "notes_before_sha256": "d1fc91c1cea0ab116583d92bf28a3461e26947dff36b211d181feb2abbd4053e",
+  "started_at": "2026-09-26T15:37:22.720400+00:00",
+  "status": "completed",
+  "finished_at": "2026-09-26T15:42:28.858098+00:00",
+  "runtime_seconds": 306.13745500007644,
+  "cost_usd": 0.6880004999999999,
+  "model_calls": 18,
+  "providers_used": [
+    "xAI"
+  ],
+  "notes_after_sha256": "dd40ac7a2345a5d1420e39019761e0e78bb35ef6e18e206fc2c84c3432db7622"
+}
