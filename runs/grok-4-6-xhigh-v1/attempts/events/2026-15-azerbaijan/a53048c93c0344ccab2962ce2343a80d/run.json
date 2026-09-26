@@ -1,0 +1,42 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "entrant": "grok-4-6-xhigh-v1",
+  "model": "x-ai/grok-4.6",
+  "request_model": "x-ai/grok-4.6-20260810",
+  "reasoning": {
+    "effort": "xhigh"
+  },
+  "openrouter_provider": {
+    "order": [
+      "xai",
+      "amazon-bedrock/us-west-2"
+    ],
+    "only": [
+      "xai",
+      "amazon-bedrock/us-west-2"
+    ],
+    "allow_fallbacks": true,
+    "require_parameters": true
+  },
+  "openrouter_cost_policy": "cost_or_upstream_inference_cost",
+  "budgets": {
+    "wall_minutes": 120,
+    "model_usd": 30.0,
+    "cpus": 4.0
+  },
+  "image": "f1bench-agent:0.3.0",
+  "network": "bridge",
+  "wrapper_version": "0.10.0",
+  "mini_swe_agent_version": "2.4.6",
+  "prompt_sha256": "7768f2d3332194ca5a69ed5d7d508aacc16cfbd964138d4c732474dfbadd8eed",
+  "event_sha256": "60ce907979761b443b58318a1d4a068a5009aaeb9f3c4cf1967f1c7fc27d5950",
+  "started_at": "2026-09-26T07:31:29.761920+00:00",
+  "status": "failed",
+  "finished_at": "2026-09-26T07:47:42.953778+00:00",
+  "runtime_seconds": 973.1868729169946,
+  "error": "OpenRouterAPIError",
+  "error_message": "HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 65536 tokens, but can only afford 45333. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"limit_source\":\"openrouter_credits\",\"remedy_hint\":\"Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.\",\"provider_name\":null}},\"user_id\":\"user_2utcIFjlEcwGvLE6Qbwhg0sMrcc\"}",
+  "providers_used": [
+    "xAI"
+  ]
+}

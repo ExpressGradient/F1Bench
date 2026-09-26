@@ -1,0 +1,143 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "summary": "George Russell converts pole into victory, with Charles Leclerc and Oscar Piastri using track position to complete the podium; Norris is fourth, while Verstappen and Antonelli recover to fifth and sixth.",
+  "order": [
+    "RUS",
+    "LEC",
+    "PIA",
+    "NOR",
+    "VER",
+    "ANT",
+    "HAM",
+    "HAD",
+    "GAS",
+    "COL",
+    "LAW",
+    "BEA",
+    "SAI",
+    "ALB",
+    "OCO",
+    "LIN",
+    "BOR",
+    "HUL",
+    "PER",
+    "BOT",
+    "ALO",
+    "STR"
+  ],
+  "reasons": {
+    "RUS": "Pole by 0.837s after leading FP1 and FP2, plus the strongest long-run evidence. Clean air makes him the clear win call; the main risks are the start, a badly timed neutralisation and Mercedes reliability.",
+    "LEC": "Front-row track position is valuable in the expected low-degradation one-stop. Ferrari looked weaker than Mercedes and McLaren over a stint, so defending P2 is more likely than challenging Russell.",
+    "PIA": "Starts P3, only 0.001s behind Leclerc, and McLaren was close to Mercedes in adjusted race-pace estimates. Straight-line weakness and traffic make a pass for P2 uncertain.",
+    "NOR": "His P5 came after a final-lap lock-up, while McLaren showed competitive long-run pace. I expect him to clear Hadjar, but Baku trains and McLaren\u2019s straight-line deficit cap the recovery.",
+    "VER": "P8 understates the underlying car: he topped FP3 and Red Bull traced qualifying\u2019s large top-speed loss to faulty power-unit parts that it planned to change. Traffic and Red Bull\u2019s elevated 2026 failure rate remain material.",
+    "ANT": "The strongest car and strategic freedom support a large recovery from P16, as his recent Monza win from P19 demonstrates. A low-degradation race still leaves many cars to pass, and both the repaired suspension and Thursday hydraulic leak add tail risk.",
+    "HAM": "Starts P6 after missing a tow in Q3 and should retain points through track position and strong season form. Ferrari\u2019s weaker long run and his Madrid brake retirement keep him behind the main recovery cars.",
+    "HAD": "An excellent P4 on his return shows real pace, but he has limited recent race mileage, voiced concern about Red Bull launches and lost Thursday running to a gearbox problem. Those risks drive the projected drop.",
+    "GAS": "P7 reflects Alpine\u2019s best-balanced Baku weekend and the season\u2019s most reliable package. He is likely to lose places to faster recovery cars but remains the leading midfield points call.",
+    "COL": "Starts P9 after Alpine\u2019s double-Q3 showing and has completed every 2026 race. His Q3 lock-up hid some pace, though the top teams behind make P10 the realistic target.",
+    "LAW": "P11 and Racing Bulls\u2019 strong reliability give him a credible points route. The team lacked its usual competitiveness on Friday, so he is the first driver just outside the central top 10.",
+    "BEA": "Starts P10 and narrowly missed Q3, but an FP2 power-unit failure follows four retirements this season. Pace supports points; reliability moves the single call behind Lawson.",
+    "SAI": "Actually qualified P9 in the upgraded Williams before a five-place yellow-flag penalty. The upgrade and underlying lap justify a small recovery, offset by Williams\u2019 straight-line concern and incident risk.",
+    "ALB": "Starts P12 and benefits from the effective Williams upgrade, but he reported unexpected straight-line weakness and was clearly behind Sainz on Friday. Points need attrition or a favourable neutralisation.",
+    "OCO": "His Q2 lap was compromised by yellow flags and Haas believes Q3 pace was available. From P13 he remains in the midfield fight, with strategy and Haas reliability the main swing factors.",
+    "LIN": "P15 after an FP2 crash, braking-confidence problems and no representative high-fuel run. Racing Bulls reliability helps, but another wall contact is a meaningful downside.",
+    "BOR": "Starts P17 after Audi failed to unlock its large upgrade in the wind. His personal finishing record is strong, giving him the edge over Hulkenberg despite limited points pace.",
+    "HUL": "P18 after yellow flags and no tow masked some Audi pace, but the car also stopped in FP1 and his season reliability is weaker than Bortoleto\u2019s. A points finish requires substantial chaos.",
+    "PER": "A three-place impeding penalty leaves him P20, but his practice pace and strong Baku history support passing Bottas. Cadillac\u2019s severe mechanical attrition is the dominant risk.",
+    "BOT": "Moves up to P19 and said late floor and suspension changes improved the car. He remained slowest in qualifying and has six 2026 retirements, so the upside is limited.",
+    "ALO": "P21 after a 30-place power-unit penalty; he comfortably outpaced Stroll but Aston lacks straight-line speed. A Thursday oil-leak investigation and persistent Honda reliability problems create a large NC tail.",
+    "STR": "Starts last in the slowest package after a 20-place power-unit penalty. Nine retirements in 14 races, another practice wall strike and continuing power complaints make him the highest-risk finisher."
+  },
+  "method": "I first reviewed the Madrid forecast and post-race calibration, then used the FIA grid and penalties, all three Baku practice sessions, qualifying, long-run lap/compound data, team comments, weather, the first 14 race results and team/driver reliability. A 5,000,000-run Monte Carlo mixed orderly, strategically disrupted and high-chaos races; it modeled grid position, latent race pace, starts, team-correlated performance, strategy, repairable incidents, DNS/DSQ and individual retirement timing. It averages 4.85 retirements, with late retirements able to retain a numbered classification. Unknown fuel loads meant short long runs were heavily shrunk toward season form. As a calibration only, I normalized the live Polymarket winner mids (about 63.8% Russell and 11.9% Antonelli after overround); the final model is about 63.9% and 12.4%. I did not copy its much higher Antonelli podium price because Pirelli\u2019s low-degradation evidence favours the cars already at the front.",
+  "uncertainty": "The strongest assumption is that a dry, very-low-degradation one-stop makes track position persistent and that Red Bull\u2019s parts change cures Verstappen\u2019s qualifying power loss. An early Safety Car or red flag during the main pit window is the clearest alternative: Antonelli and Verstappen move toward the podium, Sainz gains a points route, and Leclerc, Piastri and Hadjar lose much of their grid protection; an ill-timed stop could also unseat Russell.",
+  "insights": [
+    {
+      "claim": "Russell\u2019s advantage is genuine but the 0.837s pole margin overstates the likely race gap: he led two practices and the strongest raw long run, while one published practice estimate put McLaren only about 0.05s per lap behind and several rivals had compromised qualifying laps.",
+      "impact": "Russell is a strong 63.9% favourite rather than a near-certainty; Leclerc and Piastri are the central podium alternatives.",
+      "check": "A first stint in which Russell escapes the tow/Overtake Mode range while matching or improving on Piastri\u2019s degradation supports the call; Leclerc or Piastri staying within roughly two seconds weakens it.",
+      "sources": [
+        "s1",
+        "s2",
+        "s4"
+      ]
+    },
+    {
+      "claim": "Pirelli observed no meaningful degradation and identified a one-stop, especially Medium\u2013Soft, as the competitive baseline; the forecast is dry. That makes track position more valuable than the circuit\u2019s chaotic reputation alone suggests.",
+      "impact": "Leclerc and Piastri stay ahead of the faster recovery threats in the central order, while Antonelli is P6 despite Mercedes pace.",
+      "check": "Long opening stints, little lap-time fade and few green-flag second stops support this; early graining, a two-stop crossover or a timely neutralisation would weaken it.",
+      "sources": [
+        "s2",
+        "s3",
+        "s5",
+        "s8"
+      ]
+    },
+    {
+      "claim": "Verstappen\u2019s P8 is not representative pace: he led FP3, was close to Russell on the long run, and Red Bull said a worsening power-unit issue caused the top-speed and battery deficit before it changed the faulty parts.",
+      "impact": "He is promoted to P5, ahead of his grid slot and Hadjar, with a roughly 30% podium chance despite traffic.",
+      "check": "Normal straight-line speed and early passes on Gasly and Hamilton support the diagnosis; continued battery clipping or bottoming would invalidate the recovery call.",
+      "sources": [
+        "s2",
+        "s4",
+        "s9"
+      ]
+    },
+    {
+      "claim": "Reliability risk is highly asymmetric: Alpine and Racing Bulls have been the most dependable 2026 teams, while Aston Martin and Cadillac have suffered by far the lowest finish rates; Baku also exposed fresh issues for Bearman, Alonso and both Red Bulls.",
+      "impact": "Gasly, Colapinto and Lawson receive robust points probability, while Stroll, Bottas, Alonso, Perez and Bearman carry enlarged NC tails.",
+      "check": "The backmarkers completing the opening stint without oil, hydraulic, brake or energy-management alarms would weaken the reliability spread; early technical stops would support it.",
+      "sources": [
+        "s3",
+        "s6"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "title": "FIA Document 52 \u2014 2026 Azerbaijan Grand Prix Provisional Starting Grid",
+      "url": "https://www.fia.com/system/files/decision-document/2026_azerbaijan_grand_prix_-_provisional_starting_grid.pdf"
+    },
+    {
+      "id": "s2",
+      "title": "Formula 1 \u2014 What the teams said: Qualifying in Azerbaijan",
+      "url": "https://www.formula1.com/en/latest/article/what-the-teams-said-qualifying-in-azerbaijan-2026.1Q1zEji1dZ8Ho8SAMNABJJ"
+    },
+    {
+      "id": "s3",
+      "title": "Formula 1 \u2014 What the teams said: Thursday in Azerbaijan",
+      "url": "https://www.formula1.com/en/latest/article/what-the-teams-said-thursday-in-azerbaijan-2026.33OCsmiNRhHcKRHaPJB9m7"
+    },
+    {
+      "id": "s4",
+      "title": "GRANDE PR\u00caMIO \u2014 Azerbaijan GP race-pace analysis",
+      "url": "https://grandepremio.com/en/f1/f1-race-pace-can-anyone-challenge-russell-and-mercedes-in-baku/"
+    },
+    {
+      "id": "s5",
+      "title": "Formula 1 \u2014 2026 Azerbaijan Grand Prix weather forecast",
+      "url": "https://www.formula1.com/en/latest/article/what-is-the-weather-forecast-for-the-2026-azerbaijan-grand-prix.1rvimkTAAUb7ERzOziY9F5"
+    },
+    {
+      "id": "s6",
+      "title": "ScuderiaFans \u2014 2026 F1 reliability and DNF statistics",
+      "url": "https://scuderiafans.com/formula-1-statistics/f1-reliability-dnf-statistics/"
+    },
+    {
+      "id": "s7",
+      "title": "Polymarket \u2014 Azerbaijan Grand Prix: Driver Winner",
+      "url": "https://polymarket.com/event/f1-azerbaijan-grand-prix-winner-2026-09-26"
+    },
+    {
+      "id": "s8",
+      "title": "Formula 1 \u2014 Azerbaijan Grand Prix strategy guide",
+      "url": "https://www.formula1.com/en/latest/article/strategy-guide-what-are-the-tactical-options-for-the-azerbaijan-gp.5iDS0mk2NragziXUR0jLlP"
+    },
+    {
+      "id": "s9",
+      "title": "Formula 1 \u2014 Verstappen beats Russell and Hamilton in Azerbaijan FP3",
+      "url": "https://www.formula1.com/en/latest/article/fp3-verstappen-beats-russell-and-hamilton-in-final-practice-for-azerbaijan-gp.4BuODmX7lLpgRKnIK4oMXg"
+    }
+  ]
+}

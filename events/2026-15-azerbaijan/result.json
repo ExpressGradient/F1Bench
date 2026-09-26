@@ -1,0 +1,146 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "classification": "final",
+  "source": "https://www.formula1.com/en/results/2026/races/1295/azerbaijan/race-result",
+  "recorded_at": "2026-09-26T13:11:01.879239+00:00",
+  "results": [
+    {
+      "driver_id": "RUS",
+      "position": 1,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "VER",
+      "position": 2,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "HAD",
+      "position": 3,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "LEC",
+      "position": 4,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "ANT",
+      "position": 5,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "HAM",
+      "position": 6,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "LIN",
+      "position": 7,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "OCO",
+      "position": 8,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "BEA",
+      "position": 9,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "SAI",
+      "position": 10,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "HUL",
+      "position": 11,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "LAW",
+      "position": 12,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "BOR",
+      "position": 13,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "PIA",
+      "position": 14,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "PER",
+      "position": 15,
+      "status": "classified",
+      "retired": false
+    },
+    {
+      "driver_id": "BOT",
+      "position": 16,
+      "status": "classified",
+      "retired": true
+    },
+    {
+      "driver_id": "COL",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    },
+    {
+      "driver_id": "GAS",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    },
+    {
+      "driver_id": "NOR",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    },
+    {
+      "driver_id": "ALB",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    },
+    {
+      "driver_id": "ALO",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    },
+    {
+      "driver_id": "STR",
+      "position": null,
+      "status": "nc",
+      "retired": true
+    }
+  ],
+  "confirmed_at": "2026-09-26T15:33:21.554941+00:00",
+  "confirmation": {
+    "source": "User-supplied image reported from FIA X account",
+    "artifact": "fia-final-announcement.png",
+    "note": "Announcement headline says Final Classification; embedded table retains Provisional wording. All 22 entries match the official F1 result page recorded earlier. FIA document index still listed only the provisional PDF at confirmation."
+  }
+}

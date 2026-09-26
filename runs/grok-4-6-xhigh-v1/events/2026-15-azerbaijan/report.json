@@ -1,0 +1,173 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "summary": "George Russell should control the Azerbaijan GP from pole in the fastest car, but the 0.837s qualifying gap overstates Mercedes\u2019 Sunday margin. McLaren\u2019s long-run pace sits only ~0.05s off, so Oscar Piastri (P3) and Lando Norris (P5) are the live win threats if a Safety Car or DRS train breaks Russell\u2019s clean air. Charles Leclerc starts P2 but Ferrari\u2019s race delta is weaker; Max Verstappen\u2019s P8 is an unrepresentative power-limited lap; Kimi Antonelli starts 16th in a rebuilt Mercedes and needs a clean car plus a well-timed interruption to fight at the front.",
+  "order": [
+    "RUS",
+    "PIA",
+    "NOR",
+    "LEC",
+    "HAM",
+    "HAD",
+    "VER",
+    "ANT",
+    "GAS",
+    "COL",
+    "BEA",
+    "LAW",
+    "OCO",
+    "ALB",
+    "LIN",
+    "SAI",
+    "HUL",
+    "BOR",
+    "PER",
+    "BOT",
+    "ALO",
+    "STR"
+  ],
+  "reasons": {
+    "RUS": "Pole by 0.837s and Mercedes still the best race car. Green-flag control is his path to a third win; Baku SC/pit-entry lottery is the main way he loses. Plank/DSQ risk slightly elevated if they ran it low for that lap.",
+    "PIA": "P3, 0.001s behind Leclerc, with McLaren the closest long-run package (+0.05s). Best-placed car to pass the Ferrari and hunt Russell if the race mixes. McLaren still needs a clean T1.",
+    "NOR": "P5 after a T3 lock-up, same McLaren race pace as Piastri. Should clear Hadjar after Red Bull\u2019s poor launches and can podium or win under SC. Yellow he caused also compromised Verstappen.",
+    "LEC": "Front-row track position and a Baku specialist, but Ferrari long-run is ~0.34s off Mercedes and behind McLaren. Likely to lose places in a stint rather than steal the win unless Russell hits trouble.",
+    "HAM": "P6, Ferrari. Better starter than the Red Bulls; should stay in the P4\u2013P7 fight. Last week\u2019s Madrid brake DNF was a rebuild car \u2014 this chassis is healthier, but Baku braking is still severe.",
+    "HAD": "Outstanding P4 on return from a three-race wrist layoff, yet he flagged Red Bull launches and took few risks. Expect to lose places into T1; a podium needs a clean start and no rust-related incident.",
+    "VER": "True pace was FP3-leading and Q2-competitive; Q3 was power (~0.5s down to Hadjar), a battery abort, cold tyres and Norris\u2019s yellow. Overnight fix \u2192 recovery through Gasly into the podium fight. Unfixed \u2192 stuck in the mid-pack.",
+    "ANT": "Championship leader, fastest car, P16 after a T1 Q1 crash on a chassis that already had an FP1 hydraulic stop and a fire-damaged PU change. Madrid lesson: bump mechanical DNF after a rebuild. If it lasts, Baku\u2019s straight lets him reach the points; a win still needs SC/red timing, not another Monza.",
+    "GAS": "P7, Alpine the clear best-of-the-rest (~1.0s off). Default points if he finishes; Verstappen and Antonelli are the cars most likely to pass him.",
+    "COL": "P9 after a Q3 lock-up. Second Alpine should convert a Q3 start into points more often than not; brake comfort is his stated weakness here.",
+    "BEA": "P10, 0.092s from Q3. Haas belongs in the lower points scramble; pack T1 damage is the downside.",
+    "LAW": "P11 Racing Bulls, genuine midfield. Track position just outside the points; needs Alpine/Haas trouble or a SC to score.",
+    "OCO": "P13 Haas. Similar race car to Bearman, two places back; small climb if the pack incidents hit ahead.",
+    "ALB": "P12 in the upgraded Williams. Qualifying step is real; race-pace overtaking still limited. Holds midfield unless the race becomes a lottery.",
+    "LIN": "P15 after an FP2 castle-section crash and limited running. Racing Bulls pace is better than the grid slot; youth/wall risk is high.",
+    "SAI": "Qualified P9, starts P14 after a five-place yellow-flag penalty. Williams upgrade helped one-lap pace more than it guarantees a charge; expect a modest recovery, not a points raid unless SC-timed.",
+    "HUL": "P18 after a double Audi Q1. Experience may edge Bortoleto; points need heavy attrition.",
+    "BOR": "P17 Audi, Q1. Same package as Hulkenberg, slightly behind on Sunday expectation.",
+    "PER": "P20 after a three-place impeding penalty. Baku specialist in a points-less Cadillac; high PU/thermal DNF prior (Madrid water/PU) still applies.",
+    "BOT": "P19 Cadillac. Starts ahead of Perez on the grid but slower and less at home here; backmarker classified finish is the mode.",
+    "ALO": "Back-of-grid PU penalty, Aston\u2013Honda still slow and unreliable. Elite driver, dead car.",
+    "STR": "P22, PU penalty, highest retirement on the grid. Aston remains a speed and reliability disaster."
+  },
+  "method": "Post-qualifying, post-penalty forecast. Primary inputs: F1/FIA session results and grid, F1-compiled long-run deltas (Mercedes 0, McLaren +0.05s, Red Bull +0.30s, Ferrari +0.34s, Alpine +0.99s), Pirelli one-stop C3/C4/C5 note, dry/windy Saturday forecast, and driver-specific flags (Antonelli rebuild, Verstappen power, Hadjar starts, Sainz penalty). 280k-race Monte Carlo with three interruption regimes (green ~24%, single SC/VSC pit lottery ~44%, multi-SC/red ~32%), Baku-specific T1 pack damage, Red Bull start losses, and a 68% chance Verstappen\u2019s power is restored. Madrid review lessons applied: extra mechanical DNF after overnight rebuilds; do not copy Madrid\u2019s zero-overtake prior onto Baku\u2019s long-straight layout; do not let support-series chaos dominate the SC mix. Pre-quali betting had Antonelli favourite; a post-pole headline near ~65% Russell was used only as a cross-check and not copied \u2014 the long-run data and Baku interruption rate pull his win chance down into the low-40s.",
+  "uncertainty": "Strongest assumption: Russell\u2019s pole plus a small Mercedes race-pace edge still converts at ~43% despite McLaren sitting 0.05s off over a race stint. Alternative: the long-run is the true order of merit and one SC/pit-entry lottery regularly jumps Piastri or Norris past Russell \u2014 RUS win falls into the low-30s, PIA/NOR rise, LEC\u2019s P2 becomes a liability. Second alternative: Antonelli\u2019s rebuilt W17 fails as Hamilton\u2019s did in Madrid; ANT mass shifts to NC and Gasly/Colapinto/Bearman each pick up a points slot. Verstappen is the other swing driver: if the power unit is fully healthy he climbs through Hadjar/Hamilton; if it is not, he fights Alpine.",
+  "insights": [
+    {
+      "claim": "Russell\u2019s 0.837s pole is a one-lap outlier, not the race gap. F1 long-run data has McLaren 0.05s/lap off Mercedes and Ferrari 0.34s off; Russell himself said Thursday race pace was closely matched with McLaren and Red Bull.",
+      "impact": "Keeps Russell favourite (~43% win) but assigns ~30% combined win chance to the McLarens and only ~10% to front-row Leclerc. Piastri is ranked ahead of Leclerc despite starting behind him.",
+      "check": "If Russell walks away at 0.4s+ per lap in the first stint, the quali gap was real and McLaren were overrated. If Piastri/Norris sit within DRS of him by lap 10, the long-run read is confirmed.",
+      "sources": [
+        "s4",
+        "s13",
+        "s1"
+      ]
+    },
+    {
+      "claim": "Antonelli\u2019s P16 car is not a healthy Mercedes: FP1 hydraulic failure with a fire-damaged PU change, then a Q1 Turn 1 impact that ended qualifying. Madrid already showed an overnight-rebuild Ferrari (Hamilton) failing on brakes.",
+      "impact": "ANT retirement ~23% (highest among the top teams) and DNS ~1.6%. Win chance from 16th is real (~5.7%) but SC-dependent; points if he finishes are the base case, not another Monza 19th-to-1st.",
+      "check": "Early-lap smoke, brake or PU warnings on Antonelli\u2019s radio would support the rebuild-risk call. A clean climb through the midfield on merit with no extra pit would weaken it.",
+      "sources": [
+        "s9",
+        "s11",
+        "s19"
+      ]
+    },
+    {
+      "claim": "Verstappen\u2019s P8 is not Red Bull\u2019s Baku ceiling. He led FP3, was 0.244s off Russell in Q2, then lost ~0.5s to Hadjar from a power deficit, aborted a Q3 lap when the battery failed to hit 100%, and caught Norris\u2019s yellow.",
+      "impact": "Gives Verstappen a bimodal forecast: healthy PU \u2192 P4\u2013P6 recovery and ~18% podium; still down on power \u2192 stuck behind Gasly. Average win ~4.5% from eighth.",
+      "check": "Speed-trap and energy numbers on lap 1 versus Hadjar. If he is still ~10 km/h down the straight, the issue remains; if he passes Gasly before the first pit window, it is fixed.",
+      "sources": [
+        "s7",
+        "s8"
+      ]
+    },
+    {
+      "claim": "Baku is the opposite of Madrid for reordering: a long DRS straight plus a historically high genuine Safety Car rate, not a processional VSC-only pit lottery. Alpine\u2019s double Q3 is still the midfield points default.",
+      "impact": "Allows Antonelli/Verstappen to move several places without a full red flag, while refusing a \u2018climber\u2019 narrative for Sainz from P14 or the Audis. Gasly/Colapinto hold P9\u2013P10 unless the faster cars behind actually arrive.",
+      "check": "On-track passes into Turn 1 versus order changes only at pit stops. If the race is Madrid-static from P8 back, this Baku prior was too aggressive.",
+      "sources": [
+        "s5",
+        "s6",
+        "s15",
+        "s10"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "title": "Russell charges to pole as Antonelli suffers shock Qualifying exit \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/latest/article/russell-charges-to-pole-position-as-antonelli-suffers-shock-exit-in-qualifying-for-azerbaijan-gp.6vFe7216mR8JZuWE4QIB4w"
+    },
+    {
+      "id": "s2",
+      "title": "2026 Azerbaijan GP qualifying results \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/results/2026/races/1295/azerbaijan/qualifying"
+    },
+    {
+      "id": "s3",
+      "title": "Azerbaijan GP starting grid with four penalties \u2014 The Race",
+      "url": "https://www.the-race.com/formula-1/azerbaijan-grand-prix-starting-grid-f1-2026-results/"
+    },
+    {
+      "id": "s4",
+      "title": "F1 race pace: Can anyone challenge Russell and Mercedes in Baku? \u2014 Grande Pr\u00eamio",
+      "url": "https://grandepremio.com/en/f1/f1-race-pace-can-anyone-challenge-russell-and-mercedes-in-baku/"
+    },
+    {
+      "id": "s5",
+      "title": "Pirelli preview: C3/C4/C5 and Saturday race in Baku",
+      "url": "https://press.pirelli.com/appointment-on-saturday-for-the-azerbaijan-grand-prix/"
+    },
+    {
+      "id": "s6",
+      "title": "Strategy guide: tactical options for the Azerbaijan GP \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/latest/article/strategy-guide-what-are-the-tactical-options-for-the-azerbaijan-gp.5iDS0mk2NragziXUR0jLlP"
+    },
+    {
+      "id": "s7",
+      "title": "Everything behind Mercedes\u2019 rivals\u2019 most crushing defeat of 2026 \u2014 The Race",
+      "url": "https://www.the-race.com/formula-1/everything-behind-mercedes-f1-2026-rivals-most-crushing-defeat/"
+    },
+    {
+      "id": "s8",
+      "title": "Verstappen frustrated with power issues after P8 \u2014 Pit Debrief",
+      "url": "https://www.pitdebrief.com/post/verstappen-frustrated-with-power-issues-after-p8-in-qualifying-for-2026-f1-azerbaijan-gp/"
+    },
+    {
+      "id": "s9",
+      "title": "Antonelli crashes in Baku qualifying as Russell takes crushing pole \u2014 The Race",
+      "url": "https://www.the-race.com/formula-1/f1-azerbaijan-gp-qualifying-antonelli-crash-russell-crushing-pole/"
+    },
+    {
+      "id": "s10",
+      "title": "Azerbaijan GP weather: dry, 26\u00b0C, gusts ~43 km/h \u2014 Grande Pr\u00eamio",
+      "url": "https://grandepremio.com/en/f1/azerbaijan-gp-weather-forecast-wind-temperature-and-rain-risk-for-saturday/"
+    },
+    {
+      "id": "s11",
+      "title": "FP1: Russell leads as Antonelli suffers hydraulic issue \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/latest/article/fp1-russell-leads-opening-azerbaijan-gp-practice-from-verstappen-as-antonelli-suffers-hydraulic-issue.1vpwyIqrue0aq0qtifIKCC"
+    },
+    {
+      "id": "s13",
+      "title": "What the teams said \u2014 Qualifying in Azerbaijan \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/latest/article/what-the-teams-said-qualifying-in-azerbaijan-2026.1Q1zEji1dZ8Ho8SAMNABJJ"
+    },
+    {
+      "id": "s15",
+      "title": "Gasly buoyed by Alpine double Q3 in Baku \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/latest/article/there-was-even-more-in-it-gasly-buoyed-by-alpine-gains-after-double-q3-appearance-in-baku.5IOcdTAyFuaje0xXt6U3QV"
+    },
+    {
+      "id": "s18",
+      "title": "Official starting grid \u2014 Formula 1",
+      "url": "https://www.formula1.com/en/results/2026/races/1295/azerbaijan/starting-grid"
+    },
+    {
+      "id": "s19",
+      "title": "Antonelli: Baku recovery harder than Monza \u2014 GPBlog",
+      "url": "https://www.gpblog.com/en/news/antonelli-warns-fans-not-to-expect-another-monza-miracle-in-baku-its-harder-to-overtake-here"
+    }
+  ]
+}

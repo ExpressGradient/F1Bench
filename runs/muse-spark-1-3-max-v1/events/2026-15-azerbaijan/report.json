@@ -1,0 +1,192 @@
+{
+  "event_id": "2026-15-azerbaijan",
+  "summary": "Russell converts historic 0.837s pole into victory from Piastri and Norris, with Leclerc fading on +0.34 race pace despite front row. Hadjar holds P5 on return before recovering Verstappen/Hamilton/Antonelli in headwind-aided, SC-likely one-stop; Antonelli climbs P16 to P8 but no Baku winner has come from beyond P10.",
+  "order": [
+    "RUS",
+    "PIA",
+    "NOR",
+    "LEC",
+    "HAD",
+    "VER",
+    "HAM",
+    "ANT",
+    "GAS",
+    "COL",
+    "BEA",
+    "LAW",
+    "SAI",
+    "OCO",
+    "ALB",
+    "LIN",
+    "BOR",
+    "HUL",
+    "PER",
+    "ALO",
+    "BOT",
+    "STR"
+  ],
+  "reasons": {
+    "RUS": "Pole 1:42.526 by 0.837s, largest dry margin since 1992, hooked up, topped FP1/FP2, P2 FP3, most convincing long-run on mediums plus Mercedes straight-line best; must escape tow/DRS and manage energy. Risk: Baku pole converts only 33%, SC bunching erases gap, no teammate cover with ANT P16.",
+    "PIA": "P3 +0.838, 0.001 behind LEC, strong Q1 1:45.014 to Q2 1:43.814 to Q3 1:43.364 progression, 2024 Baku winner; McLaren closest on long-run but needs tow bar to fight Mercedes. Risk: straight-line deficit, must clear LEC, 2025 Lap1 crash here.",
+    "NOR": "P5 +1.146 after T3 lock-up pushing too far, says P2 was available and would rather die trying; recent form HUN/ZAN wins plus MAD P3 fastest Sunday outweighs Friday 1.5s floor-crack deficit. Risk: says podium impossible on straight-line, P5 traffic behind HAD, FP1 cable-tie fix.",
+    "LEC": "P2 +0.837 front row by 0.001 over PIA, 4 Baku poles 2021-24, mixed feelings gap more than expected. Risk: estimated +0.34/lap race deficit (~17s), straight-line not strength plus 2.2km energy test, must defend vs faster McLarens; ADUO2 return after MAD precaution unconfirmed.",
+    "HAD": "P4 +0.974 on wrist-injury return after missing 3 races, scans/sims fit plus 2027 deal, says front row possible with continuity. Risk: 51 bumpy laps wrist test, race pace 0.50 vs VER 0.25, vulnerable to NOR/VER on straights.",
+    "VER": "P8 +1.555 after Q2 P2 1:43.706 then Q3 collapse from 0.5s engine top-speed deficit vs HAD plus battery not 100%, front-bottoming brakes and Norris-off yellow; FP3 P1 with tow, 2 wins last 4 Baku incl 2025 Grand Slam, upgrades working. Risk: pool ICE change avoids penalty now but fragile pattern plus bottoming unfixable until 2027, P8 traffic and damage.",
+    "HAM": "P6 +1.332 after no-tow perfect storm towing Leclerc whole time plus warm-up woes; FP3 P3 with major tow. Risk: Ferrari +0.34 and straight-line weak, says all Mercedes ahead except Charles make passing tough and sees little happening, MAD brake DNF, must hold VER/ANT.",
+    "ANT": "P16 after Q1 T1 inside-wall front-left (banker 1:45.504 enough for Q2, fairly big job, no further running), hydraulic FP1 plus small fire new PU missed FP2 half, FP2 P2 +0.552, 8 wins and Monza 19 to 1. Risk: very mad unnecessary first crash since Australia FP, limited running plus confidence, P16 train LIN/SAI/OCO/ALB/LAW/BEA/COL/VER/GAS through narrow castle, harder than Monza and no Baku winner from beyond P10.",
+    "GAS": "P7 +1.521 beating VER with issue, great balance comfortably Q3, felt HAM P6 possible without COL T15 flatspot costing final lap; Alpine best midfield +0.99. Risk: 1.05 pace will be passed by VER/ANT recovery, no upgrades, must hold COL/BEA.",
+    "COL": "Grid P9 (quali 10th Q3 1:44.963 +0.916 behind GAS) after T15 run-off flatspot, struggled more than GAS; MAD P7 momentum. Risk: 1.20 vs GAS 1.05 gap, consistency, BEA/LAW pressure.",
+    "BEA": "Grid P10 (quali 11th Q2 1:44.775), Haas no updates. Risk: 1.28 in tight 0.02-0.10 midfield vs LAW/OCO/SAI, must hold vs faster SAI on offset.",
+    "LAW": "Grid P11 (quali 12th Q2 1:44.860), back from RBR sub (7th ZAN 6th MAD, best midfield points) to Racing Bulls. Risk: straight-line deficit trying to make up time not there, bad for Baku headwind straight, P11 traffic.",
+    "SAI": "Grid P14 (quali 9th Q3 1:44.566 first Williams Q3 2026, upgrade excelled but overachievement) after 5-place yellow for fastest sector under yellows plus 2pts; Q2 1:44.629 fastest midfield, both Williams out of Q1 first time since July. Risk: 9 to 14 drops into ALB/OCO/LAW/BEA train, race pace unknown after 1.9s 2026 deficit, battery/slow stops.",
+    "OCO": "Grid P13 (quali 14th Q2 1:45.016) claiming 0.3-0.4 lost to yellows (true ~1:44.66). Risk: 1.30 vs SAI 1.20 slower, P13 traffic, must pass ALB but likely cedes to SAI.",
+    "ALB": "Grid P12 (quali 13th Q2 1:45.001 +0.372 behind SAI). Risk: 1.45 vs SAI 1.20 and OCO/LAW/BEA faster, likely passed by SAI/OCO/ANT for P15.",
+    "LIN": "P15 Q2 1:45.106 +0.246 behind LAW after FP2 double-wall T8/T9 castle red with significant damage; trying too special self-criticism. Risk: rookie Baku walls, 28% DNF highest midfield, straight-line deficit.",
+    "BOR": "P17 Q1 1:45.799 leading Audi +0.295 to Q2 despite 14-part near-overhaul. Risk: package failed to deliver Q1 exit, 1.60 slow, must hold HUL.",
+    "HUL": "P18 Q1 1:45.920 +0.121 behind BOR. Risk: same Audi Q1 struggles, 1.65 slow.",
+    "PER": "P20 (quali 20th Q1 1:46.658) after 3-place impeding PIA who closed 50km/h faster when PER ignored stay-left instruction; falls behind BOT but ahead of Astons. Former Baku winner, FP2 13th FP3 16th end of 8-lap soft stint showed form. Risk: Cadillac cooling/overheating, 1.90 slow, P20 traffic.",
+    "ALO": "P22 (quali 19th Q1 1:46.593 with big lock-up escape, outqualified Cadillacs on road) after 25-place 5th engine/turbo beyond 4 plus 9th ancillary vs 6; fresh Honda PU still power-limited slowest, all 3 Aston points. Risk: last row, 1.85 slow, lock-ups in gusty headwind braking.",
+    "BOT": "P19 (quali 22nd Q1 1:48.290 slowest +1.632 behind PER) promoted ahead of PER by penalties; FP3 1:49.279 +5.357 slowest. Risk: 2.15 slowest, traffic, cooling, likely repassed by PER/ALO.",
+    "STR": "P21 (quali 21st Q1 1:47.337 +0.744 behind ALO) after 20-place Honda penalty; FP3 1:48.587 +2.075 behind ALO, water-pressure/battery plus MAD brake DNF. Risk: 30% DNF highest, slow 2.10 plus fragile."
+  },
+  "method": "Researched official FIA qualifying table (Q1/Q2/Q3), final grid after 4 penalties, FP1/FP2/FP3 times, F1 long-run estimates (MER benchmark, MCL +0.05, RBR +0.30, FER +0.34, ALP +0.99), upgrade submissions, tyre/weather/strategy previews, F2 SC/red chaos and Baku history. Ran 600k Monte Carlo (seed 12345): 51 laps, total=pace*51+grid*3.0+N(0,18)+N(0,0.22)*51, ANT -1.5 fresh-soft bonus, 7% damage +0.8/lap for P6-P12 starters, 4% +6s slow stops, DNF base 14-30% avg 4.6 plus 6% front-8 and 12% P9-P16 T1 chaos (28-30% L1-5 else uniform), NC if <46 laps else +250s tail, DNS 0.25-0.8% DSQ 0.22%. Cut grid weight 5.0 Madring to 3.0 for Baku slipstream/headwind/3-abreast and 33% pole conversion; widened MER-MCL gap to 0.20 vs noisy single-sample +0.05 for straight-line/quali historic; kept teammate gaps small except VER-HAD 0.25 for return plus recent form and NOR=PIA per last-3_races lesson. Pre-quali markets (ANT +115 favourite, NOR +420, VER +750) were stale after RUS pole/ANT P16; no post-quali odds found so no anchoring, own calibration, noting markets likely overvalue ANT Monza narrative vs 0/9 Baku wins from beyond P10.",
+  "uncertainty": "Strongest assumption is Mercedes true race edge ~0.20 over McLaren (not F1 +0.05) and VER engine pool change restores front-row pace despite lingering bottoming/brakes/fragility. Alternative: McLaren really +0.05 with straight-line fix plus early SC/VSC favouring offset/extended stints, or VER fully fixed and ANT gamble pays with early SC bunching like Monza red/F2 T3 7-car red; then PIA/NOR/VER/ANT contend for win, RUS drops to P3-4, LEC fades to P5-6 on +0.34 and energy, HAD drops with 0.50 pace, and GAS/COL/BEA could score first 2026 midfield podium if 3+ top cars DNF.",
+  "insights": [
+    {
+      "claim": "Russell 0.837s pole (largest dry since 1992) overstates race margin; F1 long-run has McLaren only +0.05 but Friday programmes plus McLaren/Ferrari straight-line deficits and single-sample noise point to true ~0.20, still clear favourite but tow/SC vulnerable.",
+      "impact": "Sets RUS win 44% not 65%+, PIA 18% NOR 12% combined 30%; RUS must escape DRS/tow early or loses to PIA/NOR undercut/SC.",
+      "check": "RUS gap to LEC/PIA by Lap 5 and speed-trap deltas; if within 1s plus SC, McLaren wins; if +2s clear, RUS controls.",
+      "sources": [
+        "s5",
+        "s2",
+        "s9"
+      ]
+    },
+    {
+      "claim": "Verstappen Q2 P2 1:43.706 to Q3 P8 1:44.081 collapse matches 0.5s engine top-speed deficit vs Hadjar plus battery not 100%, front-bottoming brakes and Norris-off yellow; pool ICE change avoids grid drop and restores front-row pace.",
+      "impact": "Sets VER pace 0.25 vs HAD 0.50 (not 0.58 quali gap), win 4.5% podium 24% from P8; if issue persists win falls to ~1%.",
+      "check": "VER main-straight speed vs HAD/RUS early plus kangaroo bouncing/brake complaints; quick passes on GAS/HAM confirm fix, continued slowness confirms fragility.",
+      "sources": [
+        "s3",
+        "s4",
+        "s6"
+      ]
+    },
+    {
+      "claim": "Antonelli P16 has fastest car and fresh softs plus offset/SC flexibility, but no Baku winner from lower than P10, castle walls plus limited hydraulic/fire running and Q1 confidence dent make this harder than Monza 19-to-1 which needed early red.",
+      "impact": "Caps ANT win 1.5% podium 12% despite 0.06 pace, central P8 +8; SC-gamble/early bunching is only win path, otherwise stuck behind LIN/SAI/OCO train.",
+      "check": "Positions gained Laps 1-10 and opening-stint length vs leaders; extended medium/hard plus early SC means charge, early stop into traffic means P8-10.",
+      "sources": [
+        "s7",
+        "s8",
+        "s10"
+      ]
+    },
+    {
+      "claim": "Leclerc P2 masks Ferrari +0.34 race deficit and straight-line/energy weakness on 2.2km straight; FP1 high-fuel strength is the only counter, otherwise 0.3s/lap fade to McLarens/Red Bulls over 51 laps (~17s).",
+      "impact": "Gives LEC win 12% on track position but expected P4 behind PIA/NOR, HAM P7; LEC must defend with deployment, cannot attack RUS.",
+      "check": "LEC gap to PIA/NOR across first stint and straight-mode deployment; holding within 1s confirms defence, steady 0.3s/lap loss confirms fade.",
+      "sources": [
+        "s5",
+        "s11"
+      ]
+    },
+    {
+      "claim": "Williams FW48 upgrade is genuine quali step (first Q3, both out of Q1 first time since July, SAI Q2 fastest midfield) but SAI 5-place yellow (fastest sector under yellows) drops P9 to P14 into traffic with unknown race pace after 1.9s 2026 deficit.",
+      "impact": "Sets SAI pace 1.20 best midfield but points only 36% from P14 (vs ~60% from P9), central P13 +1 with ALB P15 -3 as OCO/LAW/BEA hold.",
+      "check": "SAI vs ALB race pace and straight-line vs BEA/LAW; staying with BEA/LAW confirms upgrade, fading with battery/slow stop confirms quali glory.",
+      "sources": [
+        "s12",
+        "s13",
+        "s2"
+      ]
+    },
+    {
+      "claim": "Baku SC 89% plus F2 sprint 2 SCs and T3 7-car red after restart plus 2025 quali 6 reds argue chaos, but F1 quali 0 reds (only yellows) and Madring lesson (F1 quali > F2/F3) temper to ~70% SC ~12% red; headwind aids slipstreaming while 43km/h gusts raise lock-up risk on cooled tyres, one-stop low-deg with extending/SC timing decisive.",
+      "impact": "Drives noise 18s, DNF 4.8 avg, T1 6%/12% chaos plus 7% damage; keeps midfield podium <2% (needs 3+ top DNFs) despite backmarker fresh softs.",
+      "check": "SC timing vs leaders stops and T1/T2/T3 incidents/restarts; early SC helps ANT/VER recovery, late SC rewards extenders like LEC MAD 32-lap lead.",
+      "sources": [
+        "s14",
+        "s15",
+        "s16"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "s2",
+      "title": "Antonelli crashes in Baku qualifying as Russell takes crushing pole - The Race",
+      "url": "https://www.the-race.com/formula-1/f1-azerbaijan-gp-qualifying-antonelli-crash-russell-crushing-pole/"
+    },
+    {
+      "id": "s3",
+      "title": "Winners and losers from F1 Azerbaijan GP qualifying - The Race",
+      "url": "https://www.the-race.com/formula-1/f1-2026-azerbaijan-gp-qualifying-winners-losers"
+    },
+    {
+      "id": "s4",
+      "title": "Verstappen reveals why Red Bull engine problem was different than it seemed - Autosport",
+      "url": "https://www.autosport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858986"
+    },
+    {
+      "id": "s5",
+      "title": "F1 race pace: Can anyone challenge Russell and Mercedes in Baku? - GRANDE PREMIO",
+      "url": "https://grandepremio.com/en/f1/f1-race-pace-can-anyone-challenge-russell-and-mercedes-in-baku/"
+    },
+    {
+      "id": "s6",
+      "title": "F1 2026 Azerbaijan Grand Prix FP3 Results - Motorsport Week",
+      "url": "https://www.motorsportweek.com/2026/09/25/f1-2026-azerbaijan-grand-prix-fp3-results/"
+    },
+    {
+      "id": "s7",
+      "title": "Kimi Antonelli angry at himself for Baku crash - Motorsport",
+      "url": "https://www.motorsport.com/f1/news/kimi-antonelli-angry-at-himself-for-baku-crash-i-need-to-do-a-much-better-job/10858914/"
+    },
+    {
+      "id": "s8",
+      "title": "Can Antonelli still win the Azerbaijan GP from 16th? - GRANDE PREMIO",
+      "url": "https://grandepremio.com/en/f1/can-antonelli-still-win-the-azerbaijan-gp-from-16th/"
+    },
+    {
+      "id": "s9",
+      "title": "What Russell needs to convert dominant Baku pole into victory - GRANDE PREMIO",
+      "url": "https://grandepremio.com/en/f1/what-russell-needs-to-convert-dominant-baku-pole-into-victory/"
+    },
+    {
+      "id": "s10",
+      "title": "Feel like it was a good recovery - Antonelli and Mercedes reflect on practice - Formula1.com",
+      "url": "https://www.formula1.com/en/latest/article/feel-like-it-was-a-good-recovery-antonelli-and-mercedes-reflect-on-practice-running-in-azerbaijan.c0c4kn5SnpEwnolbCZye1"
+    },
+    {
+      "id": "s11",
+      "title": "Leclerc mixed feelings after P2 as Hamilton describes sitting duck moment - Formula1.com",
+      "url": "https://www.formula1.com/en/latest/article/leclerc-left-with-mixed-feelings-after-earning-p2-in-baku-qualifying-as-hamilton-describes-sitting-duck-moment.5cvKhkopV3XNbN14sMY0e9"
+    },
+    {
+      "id": "s12",
+      "title": "Revised Azerbaijan GP starting grid after four penalties - GRANDE PREMIO",
+      "url": "https://grandepremio.com/en/f1/revised-azerbaijan-gp-starting-grid-after-four-penalties/"
+    },
+    {
+      "id": "s13",
+      "title": "Audi leads Baku upgrade push as five teams stay same - Motorsport Week",
+      "url": "https://www.motorsportweek.com/2026/09/24/f1-baku-upgrades"
+    },
+    {
+      "id": "s14",
+      "title": "Azerbaijan Grand Prix 2026 Tyre Preview: Baku Goes Harder - Coffee Corner",
+      "url": "https://coffeecornermotorsport.com/azerbaijan-grand-prix-2026-tyre-preview/"
+    },
+    {
+      "id": "s15",
+      "title": "2026 F1 Azerbaijan Grand Prix Baku weather forecast - RacingNews365",
+      "url": "https://racingnews365.com/2026-f1-azerbaijan-grand-prix-baku-weather-forecast"
+    },
+    {
+      "id": "s16",
+      "title": "Tsolov caught in seven-driver pile-up as red flag stops Baku F2 race - GRANDE PREMIO",
+      "url": "https://grandepremio.com/en/f2/tsolov-caught-in-seven-driver-pile-up-as-red-flag-stops-baku-f2-race/"
+    }
+  ]
+}
