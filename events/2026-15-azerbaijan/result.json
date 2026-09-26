@@ -137,10 +137,5 @@
       "retired": true
     }
   ],
-  "confirmed_at": "2026-09-26T15:33:21.554941+00:00",
-  "confirmation": {
-    "source": "User-supplied image reported from FIA X account",
-    "artifact": "fia-final-announcement.png",
-    "note": "Announcement headline says Final Classification; embedded table retains Provisional wording. All 22 entries match the official F1 result page recorded earlier. FIA document index still listed only the provisional PDF at confirmation."
-  }
+  "confirmed_at": "2026-09-26T15:33:21.554941+00:00"
 }
