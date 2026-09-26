@@ -1,16 +1,50 @@
+// Missing telemetry is unknown, never free or instantaneous.
+export function runUsage(forecast) {
+  const valid = (value) =>
+    Number.isFinite(value) && value >= 0 ? value : null;
+  return {
+    cost: valid(forecast?.run_details?.cost_usd ?? forecast?.cost_usd),
+    seconds: valid(forecast?.run_details?.runtime_seconds),
+  };
+}
+
+export function usageSummary(forecasts) {
+  const runs = forecasts.map(runUsage);
+  const aggregate = (key) => {
+    const recorded = runs.filter((run) => run[key] !== null);
+    const total =
+      runs.length && recorded.length === runs.length
+        ? recorded.reduce((sum, run) => sum + run[key], 0)
+        : null;
+    return {
+      total,
+      average: total === null ? null : total / runs.length,
+      recorded: recorded.length,
+    };
+  };
+  return {
+    cost: aggregate("cost"),
+    seconds: aggregate("seconds"),
+    count: runs.length,
+  };
+}
+
+export const money = (value) =>
+  Number.isFinite(value) ? `$${value.toFixed(2)}` : "—";
+export const duration = (seconds) =>
+  Number.isFinite(seconds) ? `${(seconds / 60).toFixed(1)}m` : "—";
+
 // Compare every model on the same races; a missing forecast never counts as zero.
 export function seasonSummary(races, season) {
   const events = races
     .filter((r) => r.season === season)
     .sort((a, b) => a.round - b.round);
   const models =
-    events
-      .at(-1)
-      ?.forecasts.map(({ entrant, name, model }) => ({
-        entrant,
-        name,
-        model,
-      })) || [];
+    events.at(-1)?.forecasts.map(({ entrant, name, model }) => ({
+      entrant,
+      name,
+      model,
+    })) || [];
   const valid = (forecast) => Number.isFinite(forecast?.metrics?.mean_rps);
   const completed = events.filter((r) => r.forecasts.some(valid));
   const shared = completed.filter(
@@ -41,6 +75,9 @@ export function seasonSummary(races, season) {
     .map((model) => ({
       ...model,
       score: shared.length ? totals[model.entrant] / shared.length : null,
+      usage: usageSummary(
+        shared.map((r) => r.forecasts.find((f) => f.entrant === model.entrant)),
+      ),
       coverage: completed.filter((r) =>
         valid(r.forecasts.find((f) => f.entrant === model.entrant)),
       ).length,

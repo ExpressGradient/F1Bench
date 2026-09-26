@@ -17,6 +17,18 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/og/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
-  ]
+  ],
+  "framework": "nextjs",
+  "buildCommand": "bun run build",
+  "installCommand": "bun install --frozen-lockfile"
 }

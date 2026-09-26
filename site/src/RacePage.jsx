@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { Analytics } from "@vercel/analytics/react";
-import "./styles.css";
-import SeasonBench from "./SeasonBench";
-import { sortDrivers } from "./season";
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { sortDrivers, runUsage, money, duration } from "./season";
 import Notes, { Note } from "./Notes.jsx";
 import { modelColor } from "./brands";
 
@@ -38,7 +38,7 @@ function DriverTable({ forecast, race }) {
         <div>
           <span className="eyebrow">Driver forecasts</span>
           <h2>
-            {forecast.report ? "Where they land" : "Forecast probabilities"}
+            {forecast.report ? "Predicted order" : "Forecast probabilities"}
           </h2>
         </div>
         <span className="count">{forecast.rows.length} drivers</span>
@@ -305,17 +305,9 @@ function Research({ forecast }) {
                   : "Not recorded")}
             </dd>
             <dt>Runtime</dt>
-            <dd>
-              {Number.isFinite(forecast.run_details.runtime_seconds)
-                ? `${Math.floor(forecast.run_details.runtime_seconds / 60)} min ${Math.round(forecast.run_details.runtime_seconds % 60)} sec`
-                : "Not recorded"}
-            </dd>
+            <dd>{duration(runUsage(forecast).seconds)}</dd>
             <dt>Model spend</dt>
-            <dd>
-              {Number.isFinite(forecast.run_details.cost_usd)
-                ? `$${forecast.run_details.cost_usd.toFixed(2)}`
-                : "Not recorded"}
-            </dd>
+            <dd>{money(runUsage(forecast).cost)}</dd>
             <dt>Model calls</dt>
             <dd>{forecast.run_details.model_calls ?? "Not recorded"}</dd>
             <dt>Provider</dt>
@@ -336,19 +328,10 @@ function Research({ forecast }) {
   );
 }
 
-function Scores({ race, races }) {
+function Scores({ race, standings, sharedRaces }) {
   const scored = race.forecasts
     .filter((f) => f.metrics)
     .sort((a, b) => a.metrics.mean_rps - b.metrics.mean_rps);
-  // A season comparison uses only races completed by every currently configured model.
-  const common = races.filter(
-    (r) =>
-      r.season === race.season &&
-      r.forecasts.length === race.forecasts.length &&
-      r.forecasts.every(
-        (f) => f.metrics && race.forecasts.some((m) => m.entrant === f.entrant),
-      ),
-  );
   return (
     <section className="scores panel" id="scores">
       <div className="section-heading">
@@ -361,18 +344,20 @@ function Scores({ race, races }) {
         </span>
       </div>
       <p className="table-caption">
-        Every driver counts. Ranked Probability Score rewards accurate forecasts
-        and honest uncertainty. Lower is better.
+        RPS measures forecast error; lower is better. Cost and time are for the
+        saved forecast.
       </p>
       {scored.length ? (
         <div className="table-scroll">
           <table className="score-table">
             <thead>
               <tr>
-                <th>Model</th>
-                <th>This race · RPS</th>
-                <th>Rank error</th>
-                <th>Season · RPS</th>
+                <th scope="col">Model</th>
+                <th scope="col">Race RPS</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Time</th>
+                <th scope="col">Rank error</th>
+                <th scope="col">Season RPS</th>
               </tr>
             </thead>
             <tbody>
@@ -387,22 +372,16 @@ function Scores({ race, races }) {
                     </strong>
                   </td>
                   <td className="score-value">{number(f.metrics.mean_rps)}</td>
+                  <td>{money(runUsage(f).cost)}</td>
+                  <td>{duration(runUsage(f).seconds)}</td>
                   <td>
                     {number(f.metrics.expected_rank_mae, 2)}{" "}
                     <small>places</small>
                   </td>
                   <td>
-                    {common.length
-                      ? number(
-                          common.reduce(
-                            (sum, r) =>
-                              sum +
-                              r.forecasts.find((m) => m.entrant === f.entrant)
-                                .metrics.mean_rps,
-                            0,
-                          ) / common.length,
-                        )
-                      : "—"}
+                    {number(
+                      standings.find((m) => m.entrant === f.entrant)?.score,
+                    )}
                   </td>
                 </tr>
               ))}
@@ -415,8 +394,8 @@ function Scores({ race, races }) {
         </div>
       )}
       <p className="table-foot">
-        Season average: {common.length} shared{" "}
-        {common.length === 1 ? "race" : "races"} in {race.season}. Rank error
+        Season average: {sharedRaces} shared{" "}
+        {sharedRaces === 1 ? "race" : "races"} in {race.season}. Rank error
         compares each driver’s expected finish with the result. Unclassified
         outcomes count as field size + 1.
       </p>
@@ -424,7 +403,8 @@ function Scores({ race, races }) {
   );
 }
 
-function RacePage({ race, races }) {
+export default function RacePage({ race, raceList, standings, sharedRaces }) {
+  const router = useRouter();
   const [entrant, setEntrant] = useState(
     race.forecasts.find((f) => f.status === "completed")?.entrant ||
       race.forecasts[0]?.entrant,
@@ -434,6 +414,25 @@ function RacePage({ race, races }) {
   const title = titleParts.at(-1);
   return (
     <>
+      <div className="season-bar">
+        <Link className="back-link" href="/">
+          ← All results
+        </Link>
+        <label className="race-select">
+          <span>Race</span>
+          <select
+            aria-label="Race"
+            value={race.id}
+            onChange={(e) => router.push(`/races/${e.target.value}/`)}
+          >
+            {raceList.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.season} · R{r.round} · {r.name.split(/\s+[—–]\s+/).at(-1)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <section className="hero">
         <div className="hero-copy">
           <div className="hero-meta">
@@ -446,6 +445,7 @@ function RacePage({ race, races }) {
           <p>{titleParts.length > 1 ? titleParts[0] : "Race forecast"}</p>
         </div>
       </section>
+      <Scores race={race} standings={standings} sharedRaces={sharedRaces} />
       <div className="model-toolbar">
         <span className="eyebrow">Model</span>
         <div className="model-tabs" role="group" aria-label="Forecast model">
@@ -504,7 +504,7 @@ function RacePage({ race, races }) {
               ? "This forecast didn’t finish."
               : forecast?.status === "running"
                 ? "Research is underway."
-                : "The next call is still ahead."}
+                : "Forecast not available yet."}
           </h2>
           <p>
             A complete forecast will appear here once this model finishes its
@@ -512,180 +512,6 @@ function RacePage({ race, races }) {
           </p>
         </section>
       )}
-      <Scores race={race} races={races} />
     </>
   );
 }
-
-function App() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [raceId, setRaceId] = useState(null);
-  const [view, setView] = useState(
-    new URLSearchParams(window.location.search).has("race") ||
-      ["#forecast", "#research", "#scores"].includes(window.location.hash)
-      ? "race"
-      : "season",
-  );
-  const [season, setSeason] = useState(null);
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch(`${import.meta.env.BASE_URL}data.json`, { signal: controller.signal })
-      .then((r) => {
-        if (!r.ok) throw new Error("Race data is unavailable.");
-        return r.json();
-      })
-      .then((value) => {
-        if (!Array.isArray(value.races))
-          throw new Error("Race data is invalid.");
-        setData(value);
-        setSeason(value.races.at(-1)?.season ?? null);
-        const requested = new URLSearchParams(window.location.search).get(
-          "race",
-        );
-        setRaceId(
-          value.races.find((r) => r.id === requested)?.id ||
-            value.races.at(-1)?.id ||
-            null,
-        );
-      })
-      .catch((e) => {
-        if (e.name !== "AbortError") setError(e.message);
-      });
-    return () => controller.abort();
-  }, []);
-  const race = data?.races.find((r) => r.id === raceId);
-  function selectRace(id) {
-    setRaceId(id);
-    const url = new URL(window.location.href);
-    url.searchParams.set("race", id);
-    window.history.replaceState(null, "", url);
-  }
-  function changeView(next) {
-    setView(next);
-    const url = new URL(window.location.href);
-    url.hash = next === "season" ? "season" : "";
-    if (next === "season") url.searchParams.delete("race");
-    window.history.replaceState(null, "", url);
-  }
-  function openRace(id) {
-    selectRace(id);
-    changeView("race");
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-  return (
-    <>
-      <a className="skip" href="#main">
-        Skip to forecasts
-      </a>
-      <header className="topbar">
-        <div className="shell navigation">
-          <a className="brand" href="/" aria-label="F1 Bench home">
-            <span className="brand-mark" aria-hidden="true">
-              //
-            </span>
-            F1 BENCH
-          </a>
-          <nav aria-label="Primary">
-            <a
-              href="#season"
-              aria-current={view === "season" ? "page" : undefined}
-              onClick={() => changeView("season")}
-            >
-              Benchmark
-            </a>
-            <a href="#races" onClick={() => changeView("season")}>
-              Races
-            </a>
-            <a href="#methodology" onClick={() => changeView("season")}>
-              Methodology
-            </a>
-          </nav>
-        </div>
-      </header>
-      <main id="main" className="shell">
-        <div className="season-bar">
-          {view === "race" ? (
-            <button className="back-link" onClick={() => changeView("season")}>
-              ← Season benchmark
-            </button>
-          ) : (
-            <span className="season-tag">Formula 1 forecasting</span>
-          )}
-          {data?.races.length > 0 && view === "season" && (
-            <label className="race-select">
-              Season
-              <select
-                value={season || ""}
-                onChange={(e) => setSeason(Number(e.target.value))}
-              >
-                {[...new Set(data.races.map((r) => r.season))]
-                  .sort((a, b) => b - a)
-                  .map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-              </select>
-            </label>
-          )}
-          {data?.races.length > 0 && view === "race" && (
-            <label className="race-select">
-              <span>Race</span>
-              <select
-                value={raceId || ""}
-                onChange={(e) => selectRace(e.target.value)}
-              >
-                {[...data.races].reverse().map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.season} · R{r.round} · {r.name.replace(/^\d{4}\s+/, "")}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-        </div>
-        {error ? (
-          <section className="empty panel" role="alert">
-            <h1>Couldn’t load the races.</h1>
-            <p>{error}</p>
-            <button className="button" onClick={() => window.location.reload()}>
-              Try again
-            </button>
-          </section>
-        ) : !data ? (
-          <p className="loading" role="status">
-            Loading the benchmark…
-          </p>
-        ) : view === "season" ? (
-          <SeasonBench
-            key={season}
-            races={data.races}
-            season={season}
-            onRace={openRace}
-          />
-        ) : race ? (
-          <RacePage key={race.id} race={race} races={data.races} />
-        ) : (
-          <section className="empty panel">
-            <h1>No races yet.</h1>
-            <p>
-              The first race forecast will appear once the event is prepared.
-            </p>
-          </section>
-        )}
-      </main>
-      <footer className="shell footer">
-        <a className="brand" href="/">
-          F1 BENCH
-        </a>
-        <p>Scores use frozen, pre-race forecasts.</p>
-        <a href="https://saipraneeth.in" target="_blank" rel="noreferrer">
-          By Sai Praneeth ↗
-        </a>
-      </footer>
-      <Analytics />
-    </>
-  );
-}
-createRoot(document.getElementById("root")).render(<App />);

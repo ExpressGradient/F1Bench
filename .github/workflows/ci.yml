@@ -34,6 +34,9 @@ jobs:
         run: uv run --no-sync python -m unittest discover -s tests -v
       - name: Build Python package
         run: uv build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Install website dependencies
         working-directory: site
         run: bun install --frozen-lockfile

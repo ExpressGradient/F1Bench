@@ -57,8 +57,12 @@ export default function Methodology() {
           <p>
             The same limits apply to each post-race review. Reported cost is
             model spend, not a complete infrastructure or external search bill.
-            Race details show the actual recorded configuration, runtime, and
-            cost.
+            The leaderboard shows average cost and wall time per scored
+            forecast, plus total spend, for the same shared races used by the
+            season score. Reviews, failed attempts, and external costs are
+            excluded. Missing measurements stay blank; they never count as zero.
+            Race details show the recorded configuration and individual run
+            measurements.
           </p>
         </div>
       </details>

@@ -13,11 +13,11 @@ A Formula 1 forecasting benchmark. Models research each race, predict every driv
 
 The current cohort is GPT-5.6 Sol, Muse Spark 1.3, and Grok 4.6. Each gets its highest supported reasoning setting, 4 CPUs, up to 120 minutes, and up to $30 of model spend per forecast. Models choose their own research and calculation methods. Settings and provider policies are recorded in [the cohort configuration](cohorts/frontier-v1.json).
 
-Mean Ranked Probability Score is the primary metric; lower is better. Season standings average only races scored for every configured model. The site also shows coverage, individual race scores, full-field probabilities, original research, reviews, and run details. Learning happens through saved history and notes, not weight training.
+Mean Ranked Probability Score is the primary metric; lower is better. Season standings average only races scored for every configured model. The site compares accuracy, average cost and runtime per scored forecast, total model spend, and coverage on the same shared races. Race pages retain full-field probabilities, original research, reviews, and run details. Learning happens through saved history and notes, not weight training.
 
 ## Run the website
 
-Requires **Bun 1.3.14** and **Python 3.11+**. API keys and Docker are not needed.
+Requires **Bun 1.3.14**, **Node.js 20.9+**, and **Python 3.11+**. API keys and Docker are not needed.
 
 ```bash
 git clone https://github.com/ExpressGradient/F1Bench.git
@@ -33,7 +33,7 @@ bun run build
 bun run preview
 ```
 
-Both development and production builds export saved forecasts from `events/` and `runs/`. The production build also generates the social preview image. `site/dist/` is the complete static website. Keep the whole repository available when building; `site/` alone is not enough. Set `F1BENCH_PYTHON` if your Python executable is not `python3`.
+Both development and production builds export saved forecasts from `events/` and `runs/`. The production build also generates the social preview image. Next.js prebuilds the leaderboard and each race page; `site/out/` is the complete static website. Keep the whole repository available when building; `site/` alone is not enough. Set `F1BENCH_PYTHON` if your Python executable is not `python3`.
 
 ## Run forecasts and reviews
 
@@ -61,7 +61,7 @@ Follow the [race workflow](docs/workflow.md) for preparation, prediction, result
 | Path | Purpose |
 | --- | --- |
 | `src/f1bench/` | CLI, agent runner, validation, scoring, workflow, and chart export |
-| `site/` | React website, styles, and build scripts |
+| `site/` | Static Next.js website, styles, and build scripts |
 | `cohorts/` | Model identities, reasoning settings, and provider policies |
 | `events/` | Race entries, official results, and saved scores |
 | `runs/` | Original forecasts, research, reviews, memory, and audit trails |

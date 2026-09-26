@@ -1,6 +1,6 @@
 # Deploying the website
 
-The production site is [f1bench.vercel.app](https://f1bench.vercel.app). It is a static Vite build; it does not need model API keys, Docker, or an application server.
+The production site is [f1bench.vercel.app](https://f1bench.vercel.app). It is a static Next.js export; it does not need model API keys, Docker, or an application server.
 
 ## Build locally
 
@@ -13,7 +13,7 @@ bun test
 bun run build
 ```
 
-The build exports public benchmark data from the saved races and generates `og.png`. Only `site/dist/` is served; raw trajectories and local environment files are not website assets.
+The build exports public benchmark data from the saved races and generates the season share card at `og.png` and race cards under `og/`. Only `site/out/` is served; raw trajectories and local environment files are not website assets.
 
 ## Vercel production
 
@@ -26,7 +26,7 @@ vercel build --prod
 vercel deploy --prebuilt --prod
 ```
 
-Building locally keeps the parent directories available to the Python exporter and uploads the built website. The project uses the Vite preset, `bun run build`, and the `dist` output directory. Local project links and downloaded environment files live under `.vercel/` and must remain ignored.
+Building locally keeps the parent directories available to the Python exporter and uploads the built website. The project uses the Next.js preset and `bun run build`. Leave Vercel's Output Directory override unset so its Next.js adapter can read the build metadata and package the static export. `site/vercel.json` records these settings; remove any old Vite overrides in the Vercel project settings. Local project links and downloaded environment files live under `.vercel/` and must remain ignored.
 
 For a preview, use the matching preview environment and omit `--prod` from both build and deploy:
 
@@ -40,6 +40,6 @@ New race results require a new build and deployment. Updating saved files alone 
 
 ## Git integration
 
-If enabling Vercel builds from GitHub, use `site` as the Root Directory and enable **Include source files outside of the Root Directory in the Build Step**. The exporter needs `src/`, `scripts/`, `cohorts/`, `events/`, and `runs/`. The build environment must provide Python 3.11+; `F1BENCH_PYTHON` can select it. Install with `bun install --frozen-lockfile`, build with `bun run build`, and publish `dist`.
+If enabling Vercel builds from GitHub, use `site` as the Root Directory and enable **Include source files outside of the Root Directory in the Build Step**. The exporter needs `src/`, `scripts/`, `cohorts/`, `events/`, and `runs/`. The build environment must provide Python 3.11+; `F1BENCH_PYTHON` can select it. Use Node.js 20.9+, install with `bun install --frozen-lockfile`, build with `bun run build`, and leave the Output Directory override unset.
 
 GitHub checks validate the code and build. Production deployment remains a separate action unless the Vercel Git integration is configured.

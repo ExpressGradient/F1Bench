@@ -1,3 +1,7 @@
 # Rebuilt from the saved benchmark history during dev and production builds.
 /public/data.json
 /public/og.png
+/public/og/
+
+/.next/
+/out/

@@ -1,440 +1,551 @@
-import React, { useState } from "react";
-import { seasonSummary } from "./season";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { seasonSummary, runUsage, money, duration } from "./season";
 import Methodology from "./Methodology";
 import { modelColor } from "./brands";
 
-const fmt = (x) => (Number.isFinite(x) ? x.toFixed(4) : "—");
+const fmt = (value) => (Number.isFinite(value) ? value.toFixed(4) : "—");
+const shortRace = (race) => race.name.split(/\s+[—–]\s+/).at(-1);
 
-export default function SeasonBench({ races, season, onRace }) {
-  const { models, progression, leaderboard, excluded, completed } =
-    seasonSummary(races, season);
-  const [mode, setMode] = useState("cumulative");
-  const [selected, setSelected] = useState(null);
-  const [hovered, setHovered] = useState(null);
-  const [hidden, setHidden] = useState(new Set());
-  const visibleModels = models.filter((m) => !hidden.has(m.entrant));
-  const active =
-    progression.find((p) => p.id === (hovered || selected)) ||
-    progression.at(-1);
+function Efficiency({ models }) {
+  const [metric, setMetric] = useState("cost");
+  const points = models.filter(
+    (m) => m.score !== null && m.usage[metric].average !== null,
+  );
+  const maxX = Math.max(...points.map((m) => m.usage[metric].average), 1) * 1.3;
+  const minY = points.length
+    ? Math.max(0, Math.min(...points.map((m) => m.score)) - 0.004)
+    : 0;
+  const maxY = points.length
+    ? Math.max(...points.map((m) => m.score)) + 0.004
+    : 1;
+  const x = (value) => 56 + (value / maxX) * 350;
+  const y = (value) => 28 + ((maxY - value) / (maxY - minY)) * 150;
+  return (
+    <section className="analysis-section">
+      <div className="analysis-heading">
+        <h2>Accuracy vs. resources</h2>
+        <div
+          className="metric-switch"
+          role="group"
+          aria-label="Resource comparison"
+        >
+          <button
+            aria-pressed={metric === "cost"}
+            onClick={() => setMetric("cost")}
+          >
+            Cost
+          </button>
+          <button
+            aria-pressed={metric === "seconds"}
+            onClick={() => setMetric("seconds")}
+          >
+            Time
+          </button>
+        </div>
+      </div>
+      <p className="chart-caption">
+        Lower left is better · averages per scored forecast
+      </p>
+      {points.length ? (
+        <svg
+          className="compact-chart"
+          viewBox="0 0 460 222"
+          role="img"
+          aria-label={`Mean RPS versus average ${metric === "cost" ? "model spend" : "runtime"}. Exact values in the leaderboard.`}
+        >
+          {[0, 1, 2].map((n) => {
+            const value = minY + ((maxY - minY) * n) / 2;
+            return (
+              <g key={n}>
+                <line x1="56" x2="430" y1={y(value)} y2={y(value)} />
+                <text x="46" y={y(value) + 4} textAnchor="end">
+                  {value.toFixed(3)}
+                </text>
+              </g>
+            );
+          })}
+          {[0, 1, 2, 3].map((n) => {
+            const value = (maxX * n) / 3;
+            return (
+              <text key={n} x={x(value)} y="201" textAnchor="middle">
+                {metric === "cost" ? money(value) : duration(value)}
+              </text>
+            );
+          })}
+          <text x="56" y="14">
+            RPS ↓
+          </text>
+          {points.map((m) => (
+            <g key={m.entrant}>
+              <circle
+                cx={x(m.usage[metric].average)}
+                cy={y(m.score)}
+                r="4.5"
+                fill={modelColor(m.model)}
+              />
+              <text
+                x={x(m.usage[metric].average) + 10}
+                y={y(m.score) - 8}
+                className="point-label"
+              >
+                {models.findIndex((entry) => entry.score === m.score) + 1}
+              </text>
+              <title>{`${m.name}: ${fmt(m.score)} RPS, ${metric === "cost" ? money(m.usage.cost.average) : duration(m.usage.seconds.average)}`}</title>
+            </g>
+          ))}
+        </svg>
+      ) : (
+        <p className="chart-empty">
+          Recorded scores and {metric === "cost" ? "costs" : "runtimes"} will
+          appear here.
+        </p>
+      )}
+    </section>
+  );
+}
+
+function Progression({ models, progression, onRace }) {
+  const [mode, setMode] = useState("race");
   const values = progression.flatMap((p) =>
     models.map((m) => p.values[m.entrant][mode]),
   );
-  const minimum = values.length ? Math.min(...values) : 0;
-  const maximum = values.length ? Math.max(...values) : 1;
-  const pad = Math.max((maximum - minimum) * 0.2, 0.005);
-  const low = Math.max(0, minimum - pad),
-    high = maximum + pad;
-  const x = (index) =>
-    progression.length === 1
-      ? 470
-      : 70 + (index * 800) / (progression.length - 1);
-  // Lower RPS appears higher on the chart, matching leaderboard rank.
-  const y = (value) => 35 + ((value - low) / (high - low)) * 220;
-  function toggleModel(id) {
-    setHidden((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else if (models.length - next.size > 1) next.add(id);
-      return next;
-    });
-  }
-  function chartKey(event, index) {
-    let next = index;
-    if (event.key === "ArrowRight")
-      next = Math.min(progression.length - 1, index + 1);
-    else if (event.key === "ArrowLeft") next = Math.max(0, index - 1);
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = progression.length - 1;
-    else if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      setSelected(progression[index].id);
-      return;
-    } else if (event.key === "Escape") {
-      setSelected(null);
-      setHovered(null);
-      return;
-    } else return;
-    event.preventDefault();
-    event.currentTarget.ownerSVGElement
-      .querySelectorAll("[data-round]")
-      [next].focus();
-  }
+  const low = values.length ? Math.max(0, Math.min(...values) - 0.015) : 0;
+  const high = values.length ? Math.max(...values) + 0.015 : 1;
+  const x = (i) =>
+    progression.length === 1 ? 245 : 62 + (i * 335) / (progression.length - 1);
+  const y = (v) => 28 + ((high - v) / (high - low)) * 150;
   return (
-    <section id="season" className="season-bench">
-      <div className="bench-heading">
-        <div>
-          <h1>{season} season benchmark</h1>
-          <p>
-            Forecasting accuracy across the season. Select a race to inspect
-            each model’s work.
-          </p>
-        </div>
-        <div className="bench-count">
-          <strong>{progression.length}</strong>
-          <span>
-            shared {progression.length === 1 ? "race" : "races"} scored
-          </span>
+    <section className="analysis-section">
+      <div className="analysis-heading">
+        <h2>Across races</h2>
+        <div
+          className="metric-switch"
+          role="group"
+          aria-label="Progression metric"
+        >
+          <button
+            aria-pressed={mode === "race"}
+            onClick={() => setMode("race")}
+          >
+            Per race
+          </button>
+          <button
+            aria-pressed={mode === "cumulative"}
+            onClick={() => setMode("cumulative")}
+          >
+            Average
+          </button>
         </div>
       </div>
-      <section className="panel season-leaderboard">
-        <div className="section-heading">
-          <div>
-            <h2>Season standings</h2>
-          </div>
-          <span className="count">Mean RPS · lower is better</span>
-        </div>
-        <p className="table-caption">
-          Average race RPS across the same {progression.length} completed{" "}
-          {progression.length === 1 ? "race" : "races"} for every model.{" "}
-          {excluded > 0 &&
-            `${excluded} partially scored ${excluded === 1 ? "race is" : "races are"} excluded until all models have scores.`}
+      <p className="chart-caption">
+        {mode === "race" ? "Race RPS" : "Cumulative mean RPS"} · lower is better
+        {progression.length === 1 ? " · one race, no trend yet" : ""}
+      </p>
+      {progression.length ? (
+        <svg
+          className="compact-chart"
+          viewBox="0 0 460 222"
+          role="group"
+          aria-label="Score progression. Select a round to open its forecasts; exact scores are in the race table."
+        >
+          {[0, 1, 2].map((n) => {
+            const value = low + ((high - low) * n) / 2;
+            return (
+              <g key={n}>
+                <line x1="56" x2="430" y1={y(value)} y2={y(value)} />
+                <text x="46" y={y(value) + 4} textAnchor="end">
+                  {value.toFixed(3)}
+                </text>
+              </g>
+            );
+          })}
+          <text x="56" y="14">
+            RPS ↓
+          </text>
+          {models.map((m) => (
+            <g key={m.entrant}>
+              <polyline
+                fill="none"
+                stroke={modelColor(m.model)}
+                strokeWidth="1.6"
+                points={progression
+                  .map((p, i) => `${x(i)},${y(p.values[m.entrant][mode])}`)
+                  .join(" ")}
+              />
+              {progression.map((p, i) => (
+                <circle
+                  key={p.id}
+                  cx={x(i)}
+                  cy={y(p.values[m.entrant][mode])}
+                  r="3.5"
+                  fill={modelColor(m.model)}
+                >
+                  <title>{`${m.name} · R${p.round}: ${fmt(p.values[m.entrant][mode])}`}</title>
+                </circle>
+              ))}
+            </g>
+          ))}
+          {progression.map((p, i) => (
+            <g
+              key={p.id}
+              role="button"
+              tabIndex={0}
+              className="round-target"
+              aria-label={`Open round ${p.round}: ${p.name}. ${models.map((m) => `${m.name}: ${fmt(p.values[m.entrant][mode])} RPS`).join("; ")}`}
+              onClick={() => onRace(p.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onRace(p.id);
+                }
+              }}
+            >
+              <rect
+                x={x(i) - 18}
+                y="18"
+                width="36"
+                height="195"
+                fill="transparent"
+              />
+              {(progression.length <= 8 ||
+                i % Math.ceil(progression.length / 8) === 0 ||
+                i === progression.length - 1) && (
+                <text x={x(i)} y="201" textAnchor="middle">
+                  R{p.round}
+                </text>
+              )}
+            </g>
+          ))}
+        </svg>
+      ) : (
+        <p className="chart-empty">
+          The first shared race will start the chart.
         </p>
-        <div className="table-scroll">
-          <table className="score-table">
+      )}
+    </section>
+  );
+}
+
+export default function SeasonBench({ races }) {
+  const router = useRouter();
+  const years = [...new Set(races.map((race) => race.season))].sort(
+    (a, b) => b - a,
+  );
+  const [season, setSeason] = useState(years[0] ?? null);
+  const onRace = (id) => router.push(`/races/${id}/`);
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("race");
+    const race = races.find((r) => r.id === requested);
+    if (race) router.replace(`/races/${race.id}/${window.location.hash}`);
+  }, [races, router]);
+  const { models, progression, leaderboard, excluded, completed } =
+    seasonSummary(races, season);
+  const [sort, setSort] = useState("score");
+  const [direction, setDirection] = useState(1);
+  const [raceMetric, setRaceMetric] = useState("score");
+  const events = races
+    .filter((r) => r.season === season)
+    .sort((a, b) => b.round - a.round);
+  const value = (m, key) =>
+    key === "score"
+      ? m.score
+      : key === "total"
+        ? m.usage.cost.total
+        : m.usage[key].average;
+  const sorted = [...leaderboard].sort((a, b) => {
+    const av = value(a, sort),
+      bv = value(b, sort);
+    return av === null
+      ? bv === null
+        ? 0
+        : 1
+      : bv === null
+        ? -1
+        : (av - bv) * direction;
+  });
+  const headers = [
+    ["score", "RPS", "Mean "],
+    ["cost", "Cost", "/forecast"],
+    ["seconds", "Time", "/forecast"],
+    ["total", "Total spend"],
+  ];
+  function sortBy(key) {
+    setSort(key);
+    setDirection(sort === key ? -direction : 1);
+  }
+  return (
+    <section id="season" className="benchmark">
+      <div className="benchmark-title">
+        <div>
+          <h1>Formula 1 benchmark</h1>
+          <p>Pre-race forecasts. Official results. Accuracy, cost, and time.</p>
+        </div>
+        <label className="season-picker">
+          <span>Season</span>
+          <select
+            aria-label="Season"
+            value={season ?? ""}
+            onChange={(e) => setSeason(Number(e.target.value))}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <details className="quick-guide">
+        <summary>Explain like I’m lost</summary>
+        <p>
+          Each AI predicts every driver’s chances before the race. A 70% chance
+          of winning still leaves a 30% chance of losing.
+        </p>
+        <p>
+          <strong>RPS is the error score: lower is better.</strong> Zero is
+          perfect; 0.12 does not mean 12% accuracy. Cost and time show the average
+          dollars and minutes used to make one race forecast.
+        </p>
+        <p>
+          Compare models on the same races. A small lead over just a few races
+          is an early result, not proof that one model is always better.
+        </p>
+      </details>
+      <section className="standings" aria-labelledby="standings-heading">
+        <div className="analysis-heading">
+          <h2 id="standings-heading">Model standings</h2>
+          <span className="subtle">
+            {models.length} models · {progression.length} shared races · lower
+            RPS is better
+          </span>
+        </div>
+        <div
+          className="table-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="Season scores, costs, and runtimes"
+        >
+          <table className="benchmark-table">
             <thead>
               <tr>
-                <th scope="col">Rank</th>
+                <th scope="col" className="rank-cell">
+                  #
+                </th>
                 <th scope="col">Model</th>
-                <th scope="col">Season RPS</th>
-                {progression.length > 1 && <th scope="col">Change</th>}
-                <th scope="col">Coverage</th>
+                {headers.map(([key, title, qualifier]) => (
+                  <th
+                    key={key}
+                    scope="col"
+                    className="numeric"
+                    aria-sort={
+                      sort === key
+                        ? direction === 1
+                          ? "ascending"
+                          : "descending"
+                        : "none"
+                    }
+                  >
+                    <button onClick={() => sortBy(key)}>
+                      {key === "score" && (
+                        <span className="desktop-label">{qualifier}</span>
+                      )}
+                      {title}
+                      {key !== "score" && (
+                        <span className="desktop-label">{qualifier}</span>
+                      )}
+                      <span className="sort-indicator" aria-hidden="true">
+                        {sort === key ? (direction === 1 ? "↑" : "↓") : "↕"}
+                      </span>
+                    </button>
+                  </th>
+                ))}
+                <th scope="col" className="numeric">
+                  Scored
+                </th>
               </tr>
             </thead>
             <tbody>
-              {leaderboard.map((model, index) => (
-                <tr key={model.entrant}>
-                  <td>
-                    {model.score === null
+              {sorted.map((m) => (
+                <tr key={m.entrant}>
+                  <td className="rank-cell">
+                    {m.score === null
                       ? "—"
                       : String(
                           leaderboard.findIndex(
-                            (m) => m.score === model.score,
+                            (entry) => entry.score === m.score,
                           ) + 1,
                         ).padStart(2, "0")}
                   </td>
-                  <td>
-                    <strong
-                      className="model-name"
-                      style={{
-                        borderColor: modelColor(model.model || model.entrant),
-                      }}
-                    >
-                      {model.name}
-                    </strong>
+                  <th scope="row">
+                    <span
+                      className="model-dot"
+                      style={{ background: modelColor(m.model) }}
+                    />
+                    {m.name}
+                  </th>
+                  <td className="numeric primary-score">{fmt(m.score)}</td>
+                  <td
+                    className="numeric"
+                    title={`${m.usage.cost.recorded}/${m.usage.count} costs recorded`}
+                  >
+                    {money(m.usage.cost.average)}
                   </td>
-                  <td className="score-value">{fmt(model.score)}</td>
-                  {progression.length > 1 && (
-                    <td className={model.change < 0 ? "improved" : ""}>
-                      {model.change === null
-                        ? "—"
-                        : `${model.change > 0 ? "+" : ""}${model.change.toFixed(4)}`}
-                      <small>
-                        {model.change === null
-                          ? "Needs two races"
-                          : model.change < 0
-                            ? " improved"
-                            : model.change > 0
-                              ? " increased error"
-                              : " unchanged"}
-                      </small>
-                    </td>
-                  )}
-                  <td>
-                    {model.coverage}/{completed}
+                  <td
+                    className="numeric"
+                    title={`${m.usage.seconds.recorded}/${m.usage.count} runtimes recorded`}
+                  >
+                    {duration(m.usage.seconds.average)}
+                  </td>
+                  <td className="numeric">{money(m.usage.cost.total)}</td>
+                  <td className="numeric subtle">
+                    {m.coverage}/{completed}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </section>
-      <section className="panel progression-panel">
-        <div className="section-heading">
-          <div>
-            <h2>Season progression</h2>
-          </div>
-          <div
-            className="chart-modes"
-            role="group"
-            aria-label="Progression metric"
-          >
-            <button
-              aria-pressed={mode === "cumulative"}
-              onClick={() => setMode("cumulative")}
-            >
-              Cumulative average
-            </button>
-            <button
-              aria-pressed={mode === "race"}
-              onClick={() => setMode("race")}
-            >
-              Per race
-            </button>
-          </div>
-        </div>
-        <p className="table-caption">
-          {mode === "cumulative"
-            ? "Each point averages all shared races up to that round."
-            : "Each point shows that race’s score on its own."}{" "}
-          Lower scores appear higher. Hover or focus to inspect; click to select
-          a round.{" "}
-          {progression.length === 1 &&
-            "Only one race is scored so far; a trend needs at least two."}
+        <p className="mobile-table-hint">
+          Scroll for total spend and coverage →
         </p>
-        <div className="chart-legend">
-          {models.map((m, i) => (
-            <button
-              key={m.entrant}
-              aria-pressed={!hidden.has(m.entrant)}
-              onClick={() => toggleModel(m.entrant)}
-              title="Show or hide this model on the chart"
-            >
-              <i style={{ background: modelColor(m.model || m.entrant) }} />
-              {m.name}
-            </button>
-          ))}
+        {!models.length && (
+          <p className="chart-empty">No forecasts in this season yet.</p>
+        )}
+        <div className="benchmark-footnote">
+          <p>
+            Cost and time cover the {progression.length} shared, scored
+            forecasts per model. Model spend in USD; wall time in minutes.
+          </p>
+          <details>
+            <summary>What’s included</summary>
+            <p>
+              Successful forecast runs only. Reviews, failed attempts, search
+              fees, and infrastructure are excluded. Totals and averages show —
+              if any shared run is missing that measurement. Scored counts all
+              races with a score, including those outside the shared comparison.
+              RPS is an error measure, so spend is shown alongside the score
+              rather than divided by it.
+            </p>
+          </details>
         </div>
-        {progression.length ? (
-          <>
-            <div
-              className="season-chart"
-              onPointerLeave={() => setHovered(null)}
-            >
-              <svg
-                viewBox="0 0 940 310"
-                role="group"
-                aria-label={`${season} ${mode === "cumulative" ? "cumulative average" : "per-race"} RPS for ${models.length} models over ${progression.length} races. Tab to a round; use left and right arrows to inspect and Enter to select. Exact values in the table below.`}
-              >
-                {[0, 1, 2, 3, 4].map((t) => {
-                  const value = low + (t / 4) * (high - low);
-                  return (
-                    <g key={t}>
-                      <line
-                        x1="70"
-                        x2="870"
-                        y1={y(value)}
-                        y2={y(value)}
-                        stroke="#dce3eb"
-                      />
-                      <text x="56" y={y(value) + 4} textAnchor="end">
-                        {value.toFixed(3)}
-                      </text>
-                    </g>
-                  );
-                })}
-                {progression.map((p, i) => (
-                  <g key={p.id}>
-                    {active?.id === p.id && (
-                      <line
-                        x1={x(i)}
-                        x2={x(i)}
-                        y1="26"
-                        y2="262"
-                        stroke="#9daec4"
-                        strokeDasharray="3 5"
-                      />
-                    )}
-                    {(progression.length <= 12 ||
-                      i === 0 ||
-                      i === progression.length - 1 ||
-                      i % Math.ceil(progression.length / 10) === 0) && (
-                      <text x={x(i)} y="285" textAnchor="middle">
-                        R{p.round}
-                      </text>
-                    )}
-                  </g>
-                ))}
-                {models.map(
-                  (m, i) =>
-                    !hidden.has(m.entrant) && (
-                      <g key={m.entrant}>
-                        {progression.length > 1 && (
-                          <polyline
-                            fill="none"
-                            stroke={modelColor(m.model || m.entrant)}
-                            strokeWidth="2.5"
-                            points={progression
-                              .map(
-                                (p, j) =>
-                                  `${x(j)},${y(p.values[m.entrant][mode])}`,
-                              )
-                              .join(" ")}
-                          />
-                        )}
-                        {progression.map((p, j) => (
-                          <circle
-                            key={p.id}
-                            cx={x(j)}
-                            cy={y(p.values[m.entrant][mode])}
-                            r={active?.id === p.id ? 5 : 3.5}
-                            fill={modelColor(m.model || m.entrant)}
-                            stroke="white"
-                            strokeWidth="1.5"
-                          >
-                            <title>
-                              {m.name} · R{p.round}:{" "}
-                              {fmt(p.values[m.entrant][mode])}
-                            </title>
-                          </circle>
-                        ))}
-                      </g>
-                    ),
-                )}
-                {progression.map((point, index) => {
-                  const left = index === 0 ? 70 : (x(index - 1) + x(index)) / 2;
-                  const right =
-                    index === progression.length - 1
-                      ? 870
-                      : (x(index) + x(index + 1)) / 2;
-                  return (
-                    <rect
-                      key={point.id}
-                      data-round={point.id}
-                      x={left}
-                      y="22"
-                      width={Math.max(1, right - left)}
-                      height="244"
-                      fill="transparent"
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Inspect round ${point.round}: ${point.name}`}
-                      aria-pressed={selected === point.id}
-                      className="chart-hit-area"
-                      onPointerEnter={() => setHovered(point.id)}
-                      onFocus={() => setHovered(point.id)}
-                      onBlur={() => setHovered(null)}
-                      onClick={() => setSelected(point.id)}
-                      onKeyDown={(event) => chartKey(event, index)}
-                    />
-                  );
-                })}
-              </svg>
-              {(hovered || selected) && active && (
-                <div className="chart-tooltip" role="status">
-                  <strong>
-                    R{active.round} · {active.name.replace(/^\d{4}\s+/, "")}
-                  </strong>
-                  <span>
-                    {mode === "cumulative" ? "Cumulative average" : "Race RPS"}
-                  </span>
-                  {visibleModels.map((model) => (
-                    <div key={model.entrant}>
-                      <span>{model.name}</span>
-                      <b>{fmt(active.values[model.entrant][mode])}</b>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="progression-inspector">
-              <label>
-                Inspect a round
-                <select
-                  value={active.id}
-                  onChange={(e) => {
-                    setSelected(e.target.value);
-                    setHovered(null);
-                  }}
-                >
-                  {progression.map((p) => (
-                    <option value={p.id} key={p.id}>
-                      R{p.round} · {p.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button className="button" onClick={() => onRace(active.id)}>
-                Open this race ↗
-              </button>
-            </div>
-            <details className="chart-data">
-              <summary>Score data for selected round</summary>
-              <div className="table-scroll">
-                <table className="score-table progression-values">
-                  <caption>
-                    R{active.round} ·{" "}
-                    {mode === "cumulative"
-                      ? "Cumulative average through this race"
-                      : "This race only"}
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Model</th>
-                      <th scope="col">RPS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {models.map((m) => (
-                      <tr key={m.entrant}>
-                        <td>{m.name}</td>
-                        <td>{fmt(active.values[m.entrant][mode])}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </details>
-          </>
-        ) : (
-          <div className="empty-inline">
-            The first shared race score will start the season chart.
-          </div>
+        {excluded > 0 && (
+          <p className="data-notice">
+            {excluded} partially scored{" "}
+            {excluded === 1 ? "race excluded" : "races excluded"} from all
+            season averages.
+          </p>
         )}
       </section>
-      <section className="panel bench-races" id="races">
-        <div className="section-heading">
-          <h2>Races</h2>
+      <div className="shared-legend">
+        {leaderboard.map((m) => (
+          <span key={m.entrant}>
+            <i
+              className="model-dot"
+              style={{ background: modelColor(m.model) }}
+            />
+            {m.score === null
+              ? ""
+              : `${leaderboard.findIndex((entry) => entry.score === m.score) + 1} · `}
+            {m.name}
+          </span>
+        ))}
+      </div>
+      <div className="analysis-grid">
+        <Efficiency models={leaderboard} />
+        <Progression
+          models={models}
+          progression={progression}
+          onRace={onRace}
+        />
+      </div>
+      <section id="races" className="race-breakdown">
+        <div className="analysis-heading">
+          <h2>Race breakdown</h2>
+          <div
+            className="metric-switch"
+            role="group"
+            aria-label="Race table metric"
+          >
+            {[
+              ["score", "RPS"],
+              ["cost", "Cost"],
+              ["seconds", "Time"],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                aria-pressed={raceMetric === key}
+                onClick={() => setRaceMetric(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-        <p className="table-caption">
-          Open a race for predictions, probabilities, research, and post-race
-          reviews.
-        </p>
-        <div className="table-scroll">
-          <table className="score-table">
+        <div
+          className="table-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="Per-race comparison"
+        >
+          <table className="benchmark-table race-matrix">
             <thead>
               <tr>
-                <th scope="col">Round</th>
-                <th scope="col">Race</th>
-                <th scope="col">Status</th>
-                <th scope="col">Scored</th>
-                <th scope="col">
-                  <span className="sr-only">Open race</span>
+                <th scope="col">Round / race</th>
+                {models.map((m) => (
+                  <th scope="col" className="numeric" key={m.entrant}>
+                    {m.name}
+                  </th>
+                ))}
+                <th scope="col" className="numeric">
+                  Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              {races
-                .filter((r) => r.season === season)
-                .sort((a, b) => b.round - a.round)
-                .map((r) => (
-                  <tr key={r.id}>
-                    <td>{r.round}</td>
-                    <td>
-                      <strong>{r.name.replace(/^\d{4}\s+/, "")}</strong>
-                    </td>
-                    <td>{r.state}</td>
-                    <td>
-                      {
-                        r.forecasts.filter((f) =>
-                          Number.isFinite(f.metrics?.mean_rps),
-                        ).length
-                      }
-                      /{r.forecasts.length}
-                    </td>
-                    <td>
-                      <button
-                        className="race-open"
-                        onClick={() => onRace(r.id)}
-                        aria-label={`View ${r.name}`}
-                      >
-                        View race →
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+              {events.map((r) => (
+                <tr key={r.id}>
+                  <th scope="row">
+                    <Link className="race-link" href={`/races/${r.id}/`}>
+                      <span className="round-number">
+                        {String(r.round).padStart(2, "0")}
+                      </span>
+                      {shortRace(r)}
+                      <span className="race-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </Link>
+                  </th>
+                  {models.map((m) => {
+                    const f = r.forecasts.find((f) => f.entrant === m.entrant);
+                    const usage = runUsage(f);
+                    return (
+                      <td key={m.entrant} className="numeric">
+                        {raceMetric === "score"
+                          ? fmt(f?.metrics?.mean_rps)
+                          : raceMetric === "cost"
+                            ? money(usage.cost)
+                            : duration(usage.seconds)}
+                      </td>
+                    );
+                  })}
+                  <td className="numeric race-state">{r.state}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
+        <p className="chart-caption">
+          {raceMetric === "score"
+            ? "RPS · lower is better."
+            : raceMetric === "cost"
+              ? "USD · successful forecast runs only."
+              : "Wall time in minutes · successful forecast runs only."}{" "}
+          Select a race for predictions, research, and run details.
+        </p>
       </section>
       <Methodology />
     </section>
