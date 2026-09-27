@@ -493,6 +493,13 @@ tbody tr:last-child th {
 .race-matrix {
   min-width: 640px;
 }
+.race-matrix tbody tr {
+  cursor: pointer;
+}
+.race-matrix tbody tr:hover .race-link,
+.race-matrix tbody tr:focus-within .race-link {
+  color: var(--blue);
+}
 .race-link {
   display: flex;
   align-items: center;

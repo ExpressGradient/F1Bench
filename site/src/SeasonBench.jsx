@@ -645,7 +645,23 @@ export default function SeasonBench({ races }) {
             </thead>
             <tbody>
               {events.map((r) => (
-                <tr key={r.id}>
+                <tr
+                  key={r.id}
+                  onClick={(event) => {
+                    if (
+                      event.target.closest("a") ||
+                      window.getSelection()?.toString()
+                    ) {
+                      return;
+                    }
+                    const href = `/races/${r.id}/`;
+                    if (event.metaKey || event.ctrlKey) {
+                      window.open(href, "_blank", "noopener,noreferrer");
+                    } else if (!event.shiftKey && !event.altKey) {
+                      onRace(r.id);
+                    }
+                  }}
+                >
                   <th scope="row">
                     <Link className="race-link" href={`/races/${r.id}/`}>
                       <span className="round-number">
