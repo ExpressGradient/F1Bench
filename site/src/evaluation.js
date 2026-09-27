@@ -28,9 +28,16 @@ export function driverErrors(rows, result) {
 
 export function resultLabel(result) {
   if (!result) return "Pending";
-  return result.status === "classified"
-    ? `P${result.position}${result.retired ? "*" : ""}`
+  const classification = result.status === "classified"
+    ? `P${result.position}`
     : result.status.toUpperCase();
+  return `${classification}${result.retired ? " · Retired" : ""}`;
+}
+
+export function retirementError(probability, result) {
+  if (!Number.isFinite(probability) || typeof result?.retired !== "boolean")
+    return null;
+  return (probability - Number(result.retired)) ** 2;
 }
 
 // Fixed naive reference, added retrospectively. No parameters fitted to race results.

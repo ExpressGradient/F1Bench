@@ -1,13 +1,24 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { driverErrors, gridBaseline, scoreGains } from "./evaluation.js";
+import { driverErrors, gridBaseline, scoreGains, resultLabel, retirementError } from "./evaluation.js";
 import { reviewSections, noteSections } from "./note-sections.js";
 import { seasonSummary } from "./season.js";
 
 const json = (path) =>
   JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-12, `${a} != ${b}`);
+
+test("retirements remain visible for classified and unclassified drivers", () => {
+  assert.equal(resultLabel({ status: "nc", retired: true }), "NC · Retired");
+  assert.equal(resultLabel({ status: "classified", position: 16, retired: true }), "P16 · Retired");
+  assert.equal(resultLabel({ status: "classified", position: 1, retired: false }), "P1");
+  assert.equal(resultLabel({ status: "dns", retired: false }), "DNS");
+  assert.equal(resultLabel({ status: "dsq", retired: false }), "DSQ");
+  assert.equal(resultLabel(null), "Pending");
+  assert.equal(retirementError(0.5, null), null);
+  assert.equal(retirementError(undefined, { retired: true }), null);
+});
 
 test("RPS contributions distinguish certain errors, uncertainty, and unclassified results", () => {
   const result = {
@@ -46,6 +57,13 @@ for (const eventId of ["2026-14-madrid", "2026-15-azerbaijan"]) {
       close(
         driverErrors(rows, result).reduce((sum, d) => sum + d.contribution, 0),
         entry.metrics.mean_rps,
+      );
+      close(
+        rows.reduce((sum, row) => sum + retirementError(
+          row.retirement,
+          result.results.find((r) => r.driver_id === row.id),
+        ), 0) / rows.length,
+        entry.metrics.retirement_brier,
       );
       const text = readFileSync(
         new URL(

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { sortDrivers, runUsage, money, duration } from "./season";
 import Notes, { Note } from "./Notes.jsx";
 import { modelColor } from "./brands";
-import { scoreGains } from "./evaluation";
+import { scoreGains, resultLabel, retirementError } from "./evaluation";
 import {
   RaceResult,
   BaselineNote,
@@ -159,12 +159,7 @@ function DriverTable({ forecast, race }) {
                               : undefined
                           }
                         >
-                          {truth?.status === "classified"
-                            ? `P${truth.position}`
-                            : truth?.status.toUpperCase() || "—"}
-                          {truth?.retired && truth.status === "classified"
-                            ? "*"
-                            : ""}
+                          {resultLabel(truth)}
                         </span>
                       </td>
                     )}
@@ -176,6 +171,16 @@ function DriverTable({ forecast, race }) {
                           {row.reason ||
                             "This older forecast has no separate driver note. Read the original research alongside the field."}
                         </p>
+                        {truth && (
+                          <p className="rank-explanation">
+                            Retirement chance: <strong>{percent(row.retirement)}</strong>.
+                            {" "}Actual: <strong>{truth.retired ? "Retired" : "Did not retire"}</strong>.
+                            {" "}Retirement error: <strong>{number(retirementError(row.retirement, truth))}</strong>
+                            {" "}(lower is better; 0 is perfect). This counts in the
+                            separate retirement score. The main race score uses
+                            the full finishing distribution, including NC.
+                          </p>
+                        )}
                         <p className="rank-explanation">
                           Average rank:{" "}
                           <strong>{number(row.expected_rank, 2)}</strong>. This
@@ -231,7 +236,7 @@ function DriverTable({ forecast, race }) {
         Retirement is a separate risk: a late retirement can still be
         classified.{" "}
         {race.result &&
-          "NC = not classified. * = classified retirement. Green marks an exact match to the forecast rank, regardless of the selected sort."}
+          "NC = not classified. Green only marks an exact finishing-position match; it is not a score. Retirement predictions are scored even without a green mark. Select a driver to see their retirement error."}
       </p>
     </section>
   );
@@ -422,7 +427,9 @@ function Scores({ race, standings, sharedRaces }) {
       </div>
       <p className="table-caption">
         Predictions scored against the official result. Lower error (RPS) is
-        better; 0 is perfect. Cost and time cover making the prediction.
+        better; 0 is perfect. Retirement error is the average Brier score across
+        all drivers, shown separately; it does not set the leaderboard order.
+        Cost and time cover making the prediction.
       </p>
       {scored.length ? (
         <div className="table-scroll">
@@ -431,6 +438,7 @@ function Scores({ race, standings, sharedRaces }) {
               <tr>
                 <th scope="col">Model</th>
                 <th scope="col">Error</th>
+                <th scope="col">Retirement error</th>
                 <th scope="col">{fullCost ? "Forecast cost" : "Model API"}</th>
                 <th scope="col">Time</th>
                 <th scope="col">Rank error</th>
@@ -449,6 +457,7 @@ function Scores({ race, standings, sharedRaces }) {
                     </strong>
                   </td>
                   <td className="score-value">{number(f.metrics.mean_rps)}</td>
+                  <td>{number(f.metrics.retirement_brier)}</td>
                   <td>
                     {fullCost
                       ? costLabel(f.costs?.forecast)
@@ -470,6 +479,7 @@ function Scores({ race, standings, sharedRaces }) {
                 <tr className="baseline-row">
                   <th scope="row">Grid baseline</th>
                   <td>{number(race.baseline.score)}</td>
+                  <td>—</td>
                   <td>—</td>
                   <td>—</td>
                   <td>—</td>

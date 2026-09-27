@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { driverErrors, resultLabel } from "./evaluation";
+import { driverErrors, resultLabel, retirementError } from "./evaluation";
 
 const score = (value) => value.toFixed(4);
 const percent = (value) => `${(value * 100).toFixed(1)}%`;
@@ -108,11 +108,14 @@ export function DriverComparison({ race }) {
               <th scope="col">Pick</th>
               <th scope="col">Win</th>
               <th scope="col">Top 3</th>
+              <th scope="col">Retire chance</th>
+              {actual && <th scope="col">Retirement error</th>}
             </tr>
           </thead>
           <tbody>
             {race.forecasts.map((f) => {
               const row = f.rows?.find((d) => d.id === driverId);
+              const retirement = retirementError(row?.retirement, actual);
               return (
                 <tr key={f.entrant}>
                   <th scope="row">{f.name}</th>
@@ -123,12 +126,25 @@ export function DriverComparison({ race }) {
                   </td>
                   <td>{row ? percent(row.win) : "—"}</td>
                   <td>{row ? percent(row.podium) : "—"}</td>
+                  <td>{row ? percent(row.retirement) : "—"}</td>
+                  {actual && (
+                    <td>
+                      {retirement === null ? "—" : score(retirement)}
+                    </td>
+                  )}
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      {actual && (
+        <p className="table-foot">
+          Retirement error: lower is better; 0 is perfect. A higher retirement
+          chance earns more credit when the driver retires, and less when they
+          finish. This separate score does not set the leaderboard order.
+        </p>
+      )}
       {race.forecasts.some((f) => f.rows && !f.report) && (
         <p className="table-foot">
           — No explicit finishing-order pick was saved; the original
@@ -194,8 +210,8 @@ export function ScoreDrivers({ forecast, race }) {
         </table>
       </div>
       <p className="table-foot">
-        NC = not classified; DNS = did not start; DSQ = disqualified. * =
-        retired but still classified. All three unclassified outcomes sit after
+        NC = not classified; DNS = did not start; DSQ = disqualified.
+        A retired driver can still have a classified position. All three unclassified outcomes sit after
         the last place for RPS.{" "}
         <a href={scoringCode} target="_blank" rel="noreferrer">
           Scoring code ↗
