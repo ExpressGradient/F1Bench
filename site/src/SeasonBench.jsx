@@ -8,6 +8,7 @@ import { costLabel, hasFullCosts, recordedCost } from "./costs";
 import Methodology from "./Methodology";
 import { modelColor } from "./brands";
 import { BaselineNote } from "./Evaluation";
+import PaddockCar from "./PaddockCar";
 
 const fmt = (value) => (Number.isFinite(value) ? value.toFixed(4) : "—");
 const shortRace = (race) => race.name.split(/\s+[—–]\s+/).at(-1);
@@ -352,20 +353,7 @@ export default function SeasonBench({ races }) {
             forecast cost and how long it took.
           </p>
         </div>
-        <label className="season-picker">
-          <span>Season</span>
-          <select
-            aria-label="Season"
-            value={season ?? ""}
-            onChange={(e) => setSeason(Number(e.target.value))}
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </label>
+        <PaddockCar />
       </div>
       <details className="quick-guide">
         <summary>Explain like I’m lost</summary>
@@ -384,8 +372,24 @@ export default function SeasonBench({ races }) {
         </p>
       </details>
       <section className="standings" aria-labelledby="standings-heading">
-        <div className="analysis-heading">
-          <h2 id="standings-heading">Model standings</h2>
+        <div className="analysis-heading standings-heading">
+          <div className="standings-title">
+            <h2 id="standings-heading">Model standings</h2>
+            <label className="season-picker">
+              <span>Season</span>
+              <select
+                aria-label="Season"
+                value={season ?? ""}
+                onChange={(e) => setSeason(Number(e.target.value))}
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <span className="subtle">
             {models.length} models ·{" "}
             {progression.length < 10 ? "Early results · " : ""}

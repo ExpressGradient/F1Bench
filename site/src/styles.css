@@ -241,6 +241,52 @@ tbody tr:last-child th {
   color: var(--muted);
   margin: 0;
 }
+.paddock-car {
+  display: block;
+  width: 180px;
+  height: auto;
+  flex: 0 0 180px;
+  overflow: visible;
+  padding: 0;
+  border-radius: 8px;
+}
+.paddock-car svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+.paddock-car-body {
+  animation: paddock-idle 1.8s ease-in-out infinite;
+}
+.paddock-driver {
+  transform-origin: 171px 70px;
+  animation: paddock-nod 5.6s ease-in-out infinite;
+}
+.paddock-car[aria-pressed="true"] .paddock-car-body,
+.paddock-car[aria-pressed="true"] .paddock-driver {
+  animation-play-state: paused;
+}
+@keyframes paddock-idle {
+  0%, 100% { transform: translateY(-0.7px); }
+  50% { transform: translateY(0.7px); }
+}
+@keyframes paddock-nod {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(-7deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .paddock-car-body,
+  .paddock-driver {
+    animation: none;
+  }
+}
+.standings-title {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
 .season-picker {
   display: flex;
   align-items: center;
@@ -1129,9 +1175,26 @@ tbody tr:last-child th {
     font-size: var(--text-small);
   }
   .benchmark-title {
-    align-items: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(84px, 26vw, 112px);
+    align-items: center;
     padding: 26px 0 20px;
-    gap: 16px;
+    gap: 8px 12px;
+  }
+  .benchmark-title > div {
+    display: contents;
+  }
+  .benchmark-title p {
+    grid-column: 1 / -1;
+  }
+  .paddock-car {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+  }
+  .standings-title {
+    justify-content: space-between;
+    width: 100%;
   }
   .benchmark-title h1 {
     font-size: var(--text-title-mobile);
